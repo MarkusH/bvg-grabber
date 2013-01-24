@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 import unittest
 
 from datetime import datetime
@@ -16,9 +17,7 @@ class TestQueryApi(unittest.TestCase):
 class TestDeparture(unittest.TestCase):
 
     def test_timestamp_futur(self):
-        when = datetime.now()
-        when = when.replace(minute=when.minute + 10)
-        when = when.timestamp()
+        when = time.time() + 10 * 60
         dep = Departure("from", "to", when, "line")
         self.assertLessEqual(dep.remaining().total_seconds(), 600)
         self.assertGreaterEqual(dep.remaining().total_seconds(), 590)
