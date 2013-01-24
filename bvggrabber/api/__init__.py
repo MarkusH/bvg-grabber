@@ -21,14 +21,14 @@ class Departure():
     def __init__(self, start, end, when, line):
         self.start = start
         self.end = end
+        self.now = datetime.now()
         if isinstance(when, (int, float)):
-            # We assume to get a UNIX timestamp
+            # We assume to get a UNIX / POSIX timestamp
             self.when = datetime.fromtimestamp(when)
         elif isinstance(when, str):
             self.when = parse(when)
-            now = datetime.now()
-            if (self.when - now).total_seconds() < 0:
-                self.when = self.when.replace(day=self.when.day + 1)
+            #if (self.when - self.now).total_seconds() < -60:
+            #    self.when = self.when + timedelta(days=1)
         elif isinstance(when, datetime):
             self.when = when
         else:
@@ -36,11 +36,13 @@ class Departure():
         self.line = line
 
     def __str__(self):
-        return "Start: %s, End: %s, when: %s, line: %s" % (
-            self.start, self.end, fullformat(self.when), self.line)
+        return "Start: %s, End: %s, when: %s, now: %s, line: %s" % (
+            self.start, self.end, fullformat(self.when), fullformat(self.now),
+            self.line)
 
+    @property
     def remaining(self):
-        return self.when - datetime.now()
+        return self.when - self.now
 
     def to_json(self):
         pass
