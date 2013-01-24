@@ -3,6 +3,8 @@ python:
   - "3.2"
   - "3.3"
 # command to install dependencies
-install: "pip install -r requirements.txt --use-mirrors"
+install:
+  - pip install -r requirements.txt --use-mirrors
+  - pip install coverage
 # command to run tests
-script: python -m unittest tests
+script: coverage run -m unittest -v tests/test_*.py && coverage report -m
