@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-#-.- coding: UTF-8 -.-
+# -*- coding: utf-8 -*-
 
 import json
 import time
@@ -28,6 +28,7 @@ def printOutput(stations, stationName):
                 print('%-9s%-31s%12s' % (departure['line'], departure['direction'], departureText))
             print()
 
+
 def queryAPI(stationName):
     error = ''
     try:
@@ -44,6 +45,7 @@ def queryAPI(stationName):
         else:
             error += 'Unexpected Error'
     return {'error': error}
+
 
 if __name__ == '__main__':
     while(True):
