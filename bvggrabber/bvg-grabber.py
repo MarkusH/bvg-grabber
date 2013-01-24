@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
 #-.- coding: UTF-8 -.-
 
 import json
@@ -10,28 +10,31 @@ from urllib.parse import quote
 from urllib.request import urlopen
 
 
-def printOutput(json_return, haltestelle):
-    print('Station: %s' % haltestelle)
-    if 'error' in json_return:
-        print(json_return.get('error'))
+def printOutput(stations, stationName):
+    print('Station: %s' % stationName)
+    if 'error' in stations:
+        print(stations.get('error'))
     else:
-        actual = int(datetime.today().hour) * 3600 + int(datetime.today().minute) * 60
-        for station in json_return.get('stations', []):
+        currentTime = int(datetime.today().hour) * 3600 + int(datetime.today().minute) * 60
+        for station in stations.get('stations', []):
             for departure in station.get('departures', []):
-                arrival = int(departure['time'].replace("*", "").split(":")[0]) * 3600 + int(departure['time'].replace("*", "").split(":")[1]) * 60
-                if (arrival - actual) / 60 < 0:
-                    arrival += 60 * 60 * 24
-                arrival_text = "in %2d min" % (int((arrival - actual)) / 60)
-                print('%-9s%-31s%12s' % (departure['line'], departure['direction'], arrival_text))
+                departureTime = int(departure['time'].replace("*", "").split(":")[0]) * 3600 + int(departure['time'].replace("*", "").split(":")[1]) * 60
+                if (departureTime - currentTime) / 60 < -1:
+                    departureTime += 60 * 60 * 24
+                if (departureTime - currentTime) / 60 < 2:
+                    departureText = "now"
+                else:
+                    departureText = "in %2d min" % ((departureTime - currentTime) / 60)
+                print('%-9s%-31s%12s' % (departure['line'], departure['direction'], departureText))
             print()
 
-def queryAPI(haltestelle):
+def queryAPI(stationName):
     error = ''
     try:
-        ret = urlopen('http://bvg-api.herokuapp.com/stations?input=' + quote(haltestelle))
-        return json.loads(ret.read().decode('UTF-8'))
+        stations = urlopen('http://bvg-api.herokuapp.com/stations?input=' + quote(stationName))
+        return json.loads(stations.read().decode('UTF-8'))
     except (IOError, UnicodeDecodeError) as e:
-        error = 'Error grabbing %s!\n' % haltestelle
+        error = 'Error grabbing %s!\n' % stationName
         if hasattr(e, 'reason'):
             error += 'failed to connect\n'
             error += 'Reason: ' + str(e.reason)
