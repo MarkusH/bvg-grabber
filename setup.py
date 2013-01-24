@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import codecs
+
 from os import path
 from setuptools import setup, find_packages
 
@@ -12,7 +13,7 @@ requirements = [line for line in open(path.join(BASEDIR, 'requirements.txt'))]
 
 setup(
     name='bvg-grabber',
-    description='Display the upcoming departures of buses and subways in Berlin, Germany',
+    description='Querying the upcoming public transport departures in Berlin',
     long_description=description,
     version='0.1a1',
     url='https://github.com/Markush2010/bvg-grabber',
