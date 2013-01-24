@@ -7,7 +7,7 @@ BASEDIR = path.dirname(__file__)
 
 open = lambda filepath: codecs.open(filepath, 'r', 'utf-8')
 
-description = open(path.join(BASEDIR, 'README')).read()
+description = open(path.join(BASEDIR, 'README.rst')).read()
 requirements = [line for line in open(path.join(BASEDIR, 'requirements.txt'))]
 
 setup(
