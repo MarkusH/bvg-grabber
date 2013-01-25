@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import re
 
 from datetime import datetime
 from dateutil.parser import parse
@@ -30,7 +31,7 @@ class Departure(object):
             # We assume to get a UNIX / POSIX timestamp
             self.when = datetime.fromtimestamp(when)
         elif isinstance(when, str):
-            self.when = parse(when, fuzzy=True)
+            self.when = parse(re.sub('[\s*]$', '', when))
             #if (self.when - self.now).total_seconds() < -60:
             #    self.when = self.when + timedelta(days=1)
         elif isinstance(when, datetime):
