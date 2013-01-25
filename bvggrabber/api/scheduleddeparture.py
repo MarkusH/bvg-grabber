@@ -1,17 +1,33 @@
 # -*- coding: utf-8 -*-
 import requests
 
+from datetime import datetime
+
 from bs4 import BeautifulSoup
 
 from bvggrabber.api import QueryApi, Departure
 
-SCHEDULE_QUERY_API_ENDPOINT = 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox'
+
+SCHEDULED_QUERY_API_ENDPOINT = 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox'
 
 
-class ScheduleDepartureQueryApi(QueryApi):
+class Vehicle():
 
-    def __init__(self, station):
-        super(ScheduleDepartureQueryApi, self).__init__()
+    S = 1
+    U = 2
+    TRAM = 4
+    BUS = 8
+    FERRY = 16
+    RB = 32
+    IC = 64
+
+    _ALL = 127
+
+
+class ScheduledDepartureQueryApi(QueryApi):
+
+    def __init__(self, station, vehicles=Vehicle._ALL, limit=5):
+        super(ScheduledDepartureQueryApi, self).__init__()
         if isinstance(station, str):
             self.station_enc = station.encode('iso-8859-1')
         elif isinstance(station, bytes):
@@ -19,10 +35,13 @@ class ScheduleDepartureQueryApi(QueryApi):
         else:
             raise ValueError("Invalid type for station")
         self.station = station
+        self.vehicles = bin(vehicles)[2:]
+        self.limit = limit
 
     def call(self):
-        params = {'input': self.station_enc, 'time': '12:00', 'date': '25.01.2013','productsFilter': 11, 'maxJourneys': 7, 'start': 'yes'}
-        response = requests.get(SCHEDULE_QUERY_API_ENDPOINT, params=params)
+
+        params = {'input': self.station_enc, 'time': datetime.now().strftime('%H:%M'), 'date': datetime.now().strftime('%d.%m.%Y'),'productsFilter': self.vehicles, 'maxJourneys': self.limit, 'start': 'yes'}
+        response = requests.get(SCHEDULED_QUERY_API_ENDPOINT, params=params)
         if response.status_code == requests.codes.ok:
             soup = BeautifulSoup(response.text)
             if soup.find('span', 'error'):
@@ -37,7 +56,6 @@ class ScheduleDepartureQueryApi(QueryApi):
                     return (False, [])
             else:
                 # The station seems to exist
-                #rows = soup.find('tbody').find_all('tr')
                 rows = soup.find('tbody').find_all('tr')
                 departures = []
                 for row in rows:
