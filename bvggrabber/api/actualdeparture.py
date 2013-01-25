@@ -38,7 +38,10 @@ class ActualDepartureQueryApi(QueryApi):
                     return (False, [])
             else:
                 # The station seems to exist
-                rows = soup.find('tbody').find_all('tr')
+                tbody = soup.find('tbody')
+                if tbody is None:
+                    return (False, [])
+                rows = tbody.find_all('tr')
                 departures = []
                 for row in rows:
                     tds = row.find_all('td')
