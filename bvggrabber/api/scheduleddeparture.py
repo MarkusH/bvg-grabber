@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 
-from datetime import datetime
+import datetime
 
 from bs4 import BeautifulSoup
 
@@ -40,7 +40,7 @@ class ScheduledDepartureQueryApi(QueryApi):
 
     def call(self):
 
-        params = {'input': self.station_enc, 'time': datetime.now().strftime('%H:%M'), 'date': datetime.now().strftime('%d.%m.%Y'),'productsFilter': self.vehicles, 'maxJourneys': self.limit, 'start': 'yes'}
+        params = {'input': self.station_enc, 'time': datetime.datetime.now().strftime('%H:%M'), 'date': datetime.datetime.now().strftime('%d.%m.%Y'),'productsFilter': self.vehicles, 'maxJourneys': self.limit, 'start': 'yes'}
         response = requests.get(SCHEDULED_QUERY_API_ENDPOINT, params=params)
         if response.status_code == requests.codes.ok:
             soup = BeautifulSoup(response.text)
