@@ -4,6 +4,7 @@ from dateutil.parser import parse
 
 
 fullformat = lambda dt: dt.strftime('%Y-%m-%d %H:%M')
+hourformat = lambda dt: dt.strftime('%H:%M')
 
 
 class QueryApi():
@@ -26,7 +27,7 @@ class Departure():
             # We assume to get a UNIX / POSIX timestamp
             self.when = datetime.fromtimestamp(when)
         elif isinstance(when, str):
-            self.when = parse(when)
+            self.when = parse(when, fuzzy=True)
             #if (self.when - self.now).total_seconds() < -60:
             #    self.when = self.when + timedelta(days=1)
         elif isinstance(when, datetime):
@@ -37,7 +38,7 @@ class Departure():
 
     def __str__(self):
         return "Start: %s, End: %s, when: %s, now: %s, line: %s" % (
-            self.start, self.end, fullformat(self.when), fullformat(self.now),
+            self.start, self.end, hourformat(self.when), hourformat(self.now),
             self.line)
 
     @property
