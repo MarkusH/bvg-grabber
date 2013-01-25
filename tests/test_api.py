@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import time
 import unittest
 
-from datetime import datetime, timedelta
+import datetime
 
-from bvggrabber.api import QueryApi, Departure
+from bvggrabber.api import QueryApi, Departure, fullformat
 
 
 class TestQueryApi(unittest.TestCase):
@@ -17,73 +16,93 @@ class TestQueryApi(unittest.TestCase):
 class TestDeparture(unittest.TestCase):
 
     def setUp(self):
-        self.td = timedelta(minutes=10)
+        self.since = datetime.datetime(2013, 1, 2, 3, 4, 0)
+        self.delta1 = datetime.timedelta(seconds=60)
+        self.delta2 = datetime.timedelta(seconds=80)
 
     def test_timestamp_futur(self):
-        when = time.time() + 10 * 60
-        dep = Departure("from", "to", when, "line")
+        when = self.since + self.delta1
+        dep = Departure("from", "to", when, "line", since=self.since)
         diff = dep.remaining.total_seconds()
-        self.assertLessEqual(diff, 600)
-        self.assertGreaterEqual(diff, 590)
+        self.assertEqual(diff, 60)
+
+        when = self.since + self.delta2
+        dep = Departure("from", "to", when, "line", since=self.since)
+        diff = dep.remaining.total_seconds()
+        self.assertEqual(diff, 120)
 
     def test_timestamp_now(self):
-        when = time.time()
-        dep = Departure("from", "to", when, "line")
+        when = self.since
+        dep = Departure("from", "to", when, "line", since=self.since)
         diff = dep.remaining.total_seconds()
-        self.assertLessEqual(diff, 5)
-        self.assertGreaterEqual(diff, -5)
+        self.assertEqual(diff, 0)
 
     def test_timestamp_past(self):
-        when = time.time() - 10 * 60
-        dep = Departure("from", "to", when, "line")
+        when = self.since - self.delta1
+        dep = Departure("from", "to", when, "line", since=self.since)
         diff = dep.remaining.total_seconds()
-        self.assertLessEqual(diff, -600)
-        self.assertGreaterEqual(diff, -610)
+        self.assertEqual(diff, -60)
+
+        when = self.since - self.delta2
+        dep = Departure("from", "to", when, "line", since=self.since)
+        diff = dep.remaining.total_seconds()
+        self.assertEqual(diff, -120)
 
     def test_string_futur(self):
-        when = datetime.now() + self.td
-        when = when.strftime('%Y-%m-%d %H:%M:%S')
-        dep = Departure("from", "to", when, "line")
+        when = fullformat(self.since + self.delta1)
+        dep = Departure("from", "to", when, "line", since=self.since)
         diff = dep.remaining.total_seconds()
-        self.assertLessEqual(diff, 600)
-        self.assertGreaterEqual(diff, 590)
+        self.assertEqual(diff, 60)
+
+        when = fullformat(self.since + self.delta2)
+        dep = Departure("from", "to", when, "line", since=self.since)
+        diff = dep.remaining.total_seconds()
+        self.assertEqual(diff, 120)
 
     def test_string_now(self):
-        when = datetime.now()
-        when = when.strftime('%Y-%m-%d %H:%M:%S')
-        dep = Departure("from", "to", when, "line")
+        when = fullformat(self.since)
+        dep = Departure("from", "to", when, "line", since=self.since)
         diff = dep.remaining.total_seconds()
-        self.assertLessEqual(diff, 5)
-        self.assertGreaterEqual(diff, -5)
+        self.assertEqual(diff, 0)
 
     def test_string_past(self):
-        when = datetime.now() - self.td
-        when = when.strftime('%Y-%m-%d %H:%M:%S')
-        dep = Departure("from", "to", when, "line")
+        when = fullformat(self.since - self.delta1)
+        dep = Departure("from", "to", when, "line", since=self.since)
         diff = dep.remaining.total_seconds()
-        self.assertLessEqual(diff, -600)
-        self.assertGreaterEqual(diff, -610)
+        self.assertEqual(diff, -60)
+
+        when = fullformat(self.since - self.delta2)
+        dep = Departure("from", "to", when, "line", since=self.since)
+        diff = dep.remaining.total_seconds()
+        self.assertEqual(diff, -120)
 
     def test_datetime_futur(self):
-        when = datetime.now() + self.td
-        dep = Departure("from", "to", when, "line")
+        when = self.since + self.delta1
+        dep = Departure("from", "to", when, "line", since=self.since)
         diff = dep.remaining.total_seconds()
-        self.assertLessEqual(diff, 600)
-        self.assertGreaterEqual(diff, 590)
+        self.assertEqual(diff, 60)
+
+        when = self.since + self.delta2
+        dep = Departure("from", "to", when, "line", since=self.since)
+        diff = dep.remaining.total_seconds()
+        self.assertEqual(diff, 120)
 
     def test_datetime_now(self):
-        when = datetime.now()
-        dep = Departure("from", "to", when, "line")
+        when = self.since
+        dep = Departure("from", "to", when, "line", since=self.since)
         diff = dep.remaining.total_seconds()
-        self.assertLessEqual(diff, 5)
-        self.assertGreaterEqual(diff, -5)
+        self.assertEqual(diff, 0)
 
     def test_datetime_past(self):
-        when = datetime.now() - self.td
-        dep = Departure("from", "to", when, "line")
+        when = self.since - self.delta1
+        dep = Departure("from", "to", when, "line", since=self.since)
         diff = dep.remaining.total_seconds()
-        self.assertLessEqual(diff, -600)
-        self.assertGreaterEqual(diff, -610)
+        self.assertEqual(diff, -60)
+
+        when = self.since - self.delta2
+        dep = Departure("from", "to", when, "line", since=self.since)
+        diff = dep.remaining.total_seconds()
+        self.assertEqual(diff, -120)
 
     def test_error(self):
         self.assertRaises(ValueError, Departure, "from", "to", "foo", "line")

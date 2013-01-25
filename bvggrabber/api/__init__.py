@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
+import datetime
 import json
 import re
 
-from datetime import datetime
+from math import ceil, floor
 from dateutil.parser import parse
 
 
-fullformat = lambda dt: dt.strftime('%Y-%m-%d %H:%M')
+fullformat = lambda dt: dt.strftime('%Y-%m-%d %H:%M:%S')
 hourformat = lambda dt: dt.strftime('%H:%M')
 
 
@@ -22,19 +23,22 @@ class QueryApi(object):
 
 class Departure(object):
 
-    def __init__(self, start, end, when, line):
+    def __init__(self, start, end, when, line, since=None):
+        if since is None:
+            self.now = datetime.datetime.now()
+        else:
+            self.now = since
         self.start = start
         self.end = end
         self.line = line
-        self.now = datetime.now()
         if isinstance(when, (int, float)):
             # We assume to get a UNIX / POSIX timestamp
-            self.when = datetime.fromtimestamp(when)
+            self.when = datetime.datetime.fromtimestamp(when)
         elif isinstance(when, str):
             self.when = parse(re.sub('[\s*]$', '', when))
             #if (self.when - self.now).total_seconds() < -60:
             #    self.when = self.when + timedelta(days=1)
-        elif isinstance(when, datetime):
+        elif isinstance(when, datetime.datetime):
             self.when = when
         else:
             ValueError("when must be a valid datetime, timestamp or string!")
@@ -46,7 +50,14 @@ class Departure(object):
 
     @property
     def remaining(self):
-        return self.when - self.now
+        td = self.when - self.now
+        seconds = (td / 60).total_seconds()
+        if td < datetime.timedelta(seconds=0):
+            return datetime.timedelta(minutes=floor(seconds))
+        elif td > datetime.timedelta(seconds=0):
+            return datetime.timedelta(minutes=ceil(seconds))
+        else:
+            return datetime.timedelta(seconds=0)
 
     def to_json(self):
         return json.dumps({'start': self.start.decode('iso-8859-1'),
