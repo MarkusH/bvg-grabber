@@ -37,6 +37,7 @@ class Departure(object):
             self.now = datetime.datetime.now()
         else:
             self.now = since
+
         self.start = start
         self.end = end
         self.line = line
@@ -55,7 +56,7 @@ class Departure(object):
 
     def __str__(self):
         return "Start: %s, End: %s, when: %s, now: %s, line: %s" % (
-            self.start.decode('iso-8859-1'), self.end, hourformat(self.when),
+            self.start, self.end, hourformat(self.when),
             hourformat(self.now), self.line)
 
     @property
@@ -64,7 +65,7 @@ class Departure(object):
 
     @property
     def to_json(self):
-        return json.dumps({'start': self.start.decode('iso-8859-1'),
+        return json.dumps({'start': self.start,
                            'end': self.end,
                            'line': self.line,
                            'now_full': fullformat(self.now),

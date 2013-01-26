@@ -185,7 +185,7 @@ class TestDeparture(BaseTestDeparture):
                  'when_full': "2013-01-02 03:04:45",
                  'when_hour': "03:04",
                  'remaining': 0}
-        dep1 = Departure(b"From My Station", "To Your Station",
+        dep1 = Departure("From My Station", "To Your Station",
                          self.since + self.delta1, "A Line", since=self.since)
         self.assertEqual(json1, json.loads(dep1.to_json))
         str1 = "Start: From My Station, End: To Your Station, when: 03:04, " \
@@ -200,7 +200,7 @@ class TestDeparture(BaseTestDeparture):
                  'when_full': "2013-01-02 03:05:20",
                  'when_hour': "03:05",
                  'remaining': 60}
-        dep2 = Departure(b"From My Station", "To Your Station",
+        dep2 = Departure("From My Station", "To Your Station",
                          self.since + self.delta2, "A Line", since=self.since)
         self.assertEqual(json2, json.loads(dep2.to_json))
         str2 = "Start: From My Station, End: To Your Station, when: 03:05, " \

@@ -63,7 +63,7 @@ class ScheduledDepartureQueryApi(QueryApi):
                 departures = []
                 for row in rows:
                     tds = row.find_all('td')
-                    dep = Departure(start=self.station_enc,
+                    dep = Departure(start=self.station,
                                     end=tds[2].text.strip(),
                                     when=tds[0].text.strip(),
                                     line=tds[1].text.strip())
