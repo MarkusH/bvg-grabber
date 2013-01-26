@@ -5,7 +5,7 @@ import datetime
 
 from bs4 import BeautifulSoup
 
-from bvggrabber.api import QueryApi, Departure
+from bvggrabber.api import QueryApi, Departure, hourformat
 
 
 SCHEDULED_QUERY_API_ENDPOINT = 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox'
@@ -40,7 +40,12 @@ class ScheduledDepartureQueryApi(QueryApi):
 
     def call(self):
 
-        params = {'input': self.station_enc, 'time': datetime.datetime.now().strftime('%H:%M'), 'date': datetime.datetime.now().strftime('%d.%m.%Y'),'productsFilter': self.vehicles, 'maxJourneys': self.limit, 'start': 'yes'}
+        params = {'input': self.station_enc,
+                  'time': hourformat(datetime.datetime.now()),
+                  'date': datetime.datetime.now().strftime('%d.%m.%Y'),
+                  'productsFilter': self.vehicles,
+                  'maxJourneys': self.limit,
+                  'start': 'yes'}
         response = requests.get(SCHEDULED_QUERY_API_ENDPOINT, params=params)
         if response.status_code == requests.codes.ok:
             soup = BeautifulSoup(response.text)
