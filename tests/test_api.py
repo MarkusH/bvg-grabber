@@ -34,13 +34,12 @@ class TestFunctions(unittest.TestCase):
                                      fullformat(s), fullformat(e), t))
 
     def test_compute_remaining_error(self):
-        self.assertRaises(ValueError, compute_remaining, 1357092240,
-                          datetime.datetime(2013, 1, 2, 3, 4, 1))
+        self.assertRaises(ValueError, compute_remaining,
+                          1357092240, datetime.datetime(2013, 1, 2, 3, 4, 1))
         self.assertRaises(ValueError, compute_remaining,
                           datetime.datetime(2013, 1, 2, 3, 4, 0), 1357092241)
         self.assertRaises(ValueError, compute_remaining,
-                          datetime.datetime(2013, 1, 2, 3, 4, 0),
-                          datetime.datetime(2013, 1, 2, 3, 4, 1))
+                          1357092240, 1357092241)
 
 
 class TestQueryApi(unittest.TestCase):
@@ -64,6 +63,7 @@ class TestDepartureTimestamp(BaseTestDeparture):
     def setUp(self):
         super(TestDepartureTimestamp, self).setUp()
         self.sincets = 1357092240
+        self.since = datetime.datetime.fromtimestamp(self.sincets)
         self.delta1 = self.delta1.total_seconds()
         self.delta2 = self.delta2.total_seconds()
         self.delta3 = self.delta3.total_seconds()
