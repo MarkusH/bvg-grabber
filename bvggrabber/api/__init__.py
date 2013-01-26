@@ -11,6 +11,15 @@ fullformat = lambda dt: dt.strftime('%Y-%m-%d %H:%M:%S')
 hourformat = lambda dt: dt.strftime('%H:%M')
 
 
+def compute_remaining(start, end):
+    if not isinstance(start, datetime.datetime):
+        raise ValueError("start needs to be a datetime.datetime")
+    if not isinstance(end, datetime.datetime):
+        raise ValueError("start needs to be a datetime.datetime")
+    seconds = (end - start).total_seconds()
+    return datetime.timedelta(minutes=floor(seconds / 60)).total_seconds()
+
+
 class QueryApi(object):
 
     def __init__(self):
@@ -41,24 +50,19 @@ class Departure(object):
         elif isinstance(when, datetime.datetime):
             self.when = when
         else:
-            ValueError("when must be a valid datetime, timestamp or string!")
+            raise TypeError("when must be a valid datetime, timestamp or "
+                            "string!")
 
     def __str__(self):
         return "Start: %s, End: %s, when: %s, now: %s, line: %s" % (
-            self.start, self.end, hourformat(self.when), hourformat(self.now),
-            self.line)
+            self.start.decode('iso-8859-1'), self.end, hourformat(self.when),
+            hourformat(self.now), self.line)
 
     @property
     def remaining(self):
-        td = self.when - self.now
-        seconds = (td / 60).total_seconds()
-        if td < datetime.timedelta(seconds=0):
-            return datetime.timedelta(minutes=floor(seconds))
-        elif td > datetime.timedelta(seconds=0):
-            return datetime.timedelta(minutes=ceil(seconds))
-        else:
-            return datetime.timedelta(seconds=0)
+        return compute_remaining(self.now, self.when)
 
+    @property
     def to_json(self):
         return json.dumps({'start': self.start.decode('iso-8859-1'),
                            'end': self.end,
@@ -67,4 +71,4 @@ class Departure(object):
                            'now_hour': hourformat(self.now),
                            'when_full': fullformat(self.when),
                            'when_hour': hourformat(self.when),
-                           'remaining': round(self.remaining.total_seconds())})
+                           'remaining': round(self.remaining)})
