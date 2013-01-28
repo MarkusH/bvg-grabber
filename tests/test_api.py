@@ -6,6 +6,21 @@ import unittest
 from bvggrabber.api import QueryApi, Departure, fullformat, \
     compute_remaining
 
+from bvggrabber.utils.format import int2bin
+
+
+class TestUtils(unittest.TestCase):
+
+    def test_int2bin(self):
+        nums = [(0b1101110, 7, '1101110'),
+                (0b0010001, 7, '0010001'),
+                (0b111111, 6, '111111'),
+                (0b00000001, 8, '00000001'),
+                (0b00111, 5, '00111'),
+                (0b1100011, 7, '1100011')]
+        for b, l, s in nums:
+            self.assertEqual(int2bin(b, l), s)
+
 
 class TestFunctions(unittest.TestCase):
 
