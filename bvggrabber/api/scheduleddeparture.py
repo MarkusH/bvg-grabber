@@ -7,19 +7,21 @@ from bs4 import BeautifulSoup
 
 from bvggrabber.api import QueryApi, Departure, hourformat
 
+from bvggrabber.utils.format import int2bin
+
 
 SCHEDULED_QUERY_API_ENDPOINT = 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox'
 
 
 class Vehicle():
 
-    S = 1
-    U = 2
-    TRAM = 4
+    S = 64
+    U = 32
+    TRAM = 16
     BUS = 8
-    FERRY = 16
-    RB = 32
-    IC = 64
+    FERRY = 4
+    RB = 2
+    IC = 1
 
     _ALL = 127
 
@@ -35,7 +37,7 @@ class ScheduledDepartureQueryApi(QueryApi):
         else:
             raise ValueError("Invalid type for station")
         self.station = station
-        self.vehicles = bin(vehicles)[2:]
+        self.vehicles = int2bin(vehicles)
         self.limit = limit
 
     def call(self):
