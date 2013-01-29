@@ -38,18 +38,19 @@ class ActualDepartureQueryApi(QueryApi):
                     return (False, [])
             else:
                 # The station seems to exist
-                tbody = soup.find('tbody')
-                if tbody is None:
+                result = soup.find('div', {'id': '', 'class': 'ivu_result_box'})
+                if result is None:
                     return (False, [])
-                rows = tbody.find_all('tr')
+                rows = result.find_all('tr')
                 departures = []
                 for row in rows:
-                    tds = row.find_all('td')
-                    dep = Departure(start=self.station_enc,
-                                    end=tds[2].text.strip(),
-                                    when=tds[0].text.strip(),
-                                    line=tds[1].text.strip())
-                    departures.append(dep)
+                    td = row.find_all('td')
+                    if td:
+                        dep = Departure(start=self.station_enc,
+                                        end=td[2].text.strip(),
+                                        when=td[0].text.strip(),
+                                        line=td[1].text.strip())
+                        departures.append(dep)
                 return (True, departures)
         else:
             response.raise_for_status()
