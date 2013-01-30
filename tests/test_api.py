@@ -3,23 +3,8 @@ import datetime
 import json
 import unittest
 
-from bvggrabber.api import QueryApi, Departure, fullformat, \
-    compute_remaining
-
-from bvggrabber.utils.format import int2bin
-
-
-class TestUtils(unittest.TestCase):
-
-    def test_int2bin(self):
-        nums = [(0b1101110, 7, '1101110'),
-                (0b0010001, 7, '0010001'),
-                (0b111111, 6, '111111'),
-                (0b00000001, 8, '00000001'),
-                (0b00111, 5, '00111'),
-                (0b1100011, 7, '1100011')]
-        for b, l, s in nums:
-            self.assertEqual(int2bin(b, l), s)
+from bvggrabber.api import QueryApi, Departure, compute_remaining
+from bvggrabber.utils.format import fullformat
 
 
 class TestFunctions(unittest.TestCase):
@@ -256,9 +241,9 @@ class TestDepartureTotalOrder(unittest.TestCase):
     def test_sorting_single(self):
         l = [self.dt_now1, self.dt_later, self.dt_earlier]
         self.assertEqual([self.dt_earlier, self.dt_now1, self.dt_later],
-                        sorted(l))
+                         sorted(l))
         self.assertEqual([self.dt_later, self.dt_now1, self.dt_earlier],
-                        sorted(l, reverse=True))
+                         sorted(l, reverse=True))
 
     def test_sorting_multiple(self):
         l = [self.dt_now1, self.dt_earlier, self.dt_later,
@@ -267,8 +252,8 @@ class TestDepartureTotalOrder(unittest.TestCase):
         self.assertEqual([self.dt_earlier, self.dt_earlier, self.dt_earlier,
                           self.dt_now1, self.dt_now2, self.dt_now2,
                           self.dt_later, self.dt_later, self.dt_later],
-                        sorted(l))
+                         sorted(l))
         self.assertEqual([self.dt_later, self.dt_later, self.dt_later,
                           self.dt_now1, self.dt_now2, self.dt_now2,
                           self.dt_earlier, self.dt_earlier, self.dt_earlier],
-                        sorted(l, reverse=True))
+                         sorted(l, reverse=True))

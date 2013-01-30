@@ -4,13 +4,11 @@ import json
 import re
 
 from functools import total_ordering
-from math import ceil, floor
+from math import floor
 
 from dateutil.parser import parse
 
-
-fullformat = lambda dt: dt.strftime('%Y-%m-%d %H:%M:%S')
-hourformat = lambda dt: dt.strftime('%H:%M')
+from bvggrabber.utils.format import hourformat, fullformat
 
 
 def compute_remaining(start, end):
@@ -90,7 +88,7 @@ class Departure(object):
         would require some kind of geo location in order to define a *total
         order*.
         """
-        return (remaining < other.remaining)
+        return (self.remaining < other.remaining)
 
     def __str__(self):
         return "Start: %s, End: %s, when: %s, now: %s, line: %s" % (
