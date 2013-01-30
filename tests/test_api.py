@@ -221,3 +221,54 @@ class TestDeparture(BaseTestDeparture):
         str2 = "Start: From My Station, End: To Your Station, when: 03:05, " \
                "now: 03:04, line: A Line"
         self.assertEqual(str2, str(dep2))
+
+
+class TestDepartureTotalOrder(unittest.TestCase):
+
+    def setUp(self):
+        self.td = datetime.timedelta(minutes=1)
+
+        self.dt_now1 = datetime.datetime(2013, 1, 2, 3, 4, 1)
+        self.dt_now2 = datetime.datetime(2013, 1, 2, 3, 4, 1)
+        self.dt_earlier = datetime.datetime(2013, 1, 2, 3, 4, 1) - self.td
+        self.dt_later = datetime.datetime(2013, 1, 2, 3, 4, 1) + self.td
+
+    def test_equal(self):
+        self.assertEqual(self.dt_now1, self.dt_now2)
+
+    def test_less(self):
+        self.assertLess(self.dt_earlier, self.dt_now1)
+        self.assertLess(self.dt_earlier, self.dt_later)
+        self.assertLess(self.dt_now1, self.dt_later)
+
+    def test_greater(self):
+        self.assertGreater(self.dt_now1, self.dt_earlier)
+        self.assertGreater(self.dt_later, self.dt_earlier)
+        self.assertGreater(self.dt_later, self.dt_now1)
+
+    def test_not_equal(self):
+        self.assertNotEqual(self.dt_now1, self.dt_earlier)
+        self.assertNotEqual(self.dt_now1, self.dt_later)
+        self.assertNotEqual(self.dt_now2, self.dt_earlier)
+        self.assertNotEqual(self.dt_now2, self.dt_later)
+        self.assertNotEqual(self.dt_earlier, self.dt_later)
+
+    def test_sorting_single(self):
+        l = [self.dt_now1, self.dt_later, self.dt_earlier]
+        self.assertEqual([self.dt_earlier, self.dt_now1, self.dt_later],
+                        sorted(l))
+        self.assertEqual([self.dt_later, self.dt_now1, self.dt_earlier],
+                        sorted(l, reverse=True))
+
+    def test_sorting_multiple(self):
+        l = [self.dt_now1, self.dt_earlier, self.dt_later,
+             self.dt_now2, self.dt_later, self.dt_earlier,
+             self.dt_earlier, self.dt_later, self.dt_now2]
+        self.assertEqual([self.dt_earlier, self.dt_earlier, self.dt_earlier,
+                          self.dt_now1, self.dt_now2, self.dt_now2,
+                          self.dt_later, self.dt_later, self.dt_later],
+                        sorted(l))
+        self.assertEqual([self.dt_later, self.dt_later, self.dt_later,
+                          self.dt_now1, self.dt_now2, self.dt_now2,
+                          self.dt_earlier, self.dt_earlier, self.dt_earlier],
+                        sorted(l, reverse=True))

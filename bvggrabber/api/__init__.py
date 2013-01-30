@@ -3,7 +3,9 @@ import datetime
 import json
 import re
 
+from functools import total_ordering
 from math import ceil, floor
+
 from dateutil.parser import parse
 
 
@@ -30,6 +32,7 @@ class QueryApi(object):
                                   "the call() method!")
 
 
+@total_ordering
 class Departure(object):
 
     def __init__(self, start, end, when, line, since=None):
@@ -54,11 +57,6 @@ class Departure(object):
             raise TypeError("when must be a valid datetime, timestamp or "
                             "string!")
 
-    def __str__(self):
-        return "Start: %s, End: %s, when: %s, now: %s, line: %s" % (
-            self.start, self.end, hourformat(self.when),
-            hourformat(self.now), self.line)
-
     @property
     def remaining(self):
         return compute_remaining(self.now, self.when)
@@ -73,3 +71,28 @@ class Departure(object):
                            'when_full': fullformat(self.when),
                            'when_hour': hourformat(self.when),
                            'remaining': round(self.remaining)})
+
+    def __eq__(self, other):
+        """Two departures are assumed to be equal iff their remaining time
+        and their destination are equal.
+
+        Right now we do **not** considering the start or line, since that would
+        require some kind of geo location in order to define a *total order*.
+        """
+        return ((self.remaining, self.end.lower()) ==
+                (other.remaining, other.end.lower()))
+
+    def __lt__(self, other):
+        """A departure is assumed to be less than another iff its remaining
+        time is less than the remaining time of the other departure.
+
+        Right now we do **not** considering the start, end or line, since that
+        would require some kind of geo location in order to define a *total
+        order*.
+        """
+        return (remaining < other.remaining)
+
+    def __str__(self):
+        return "Start: %s, End: %s, when: %s, now: %s, line: %s" % (
+            self.start, self.end, hourformat(self.when),
+            hourformat(self.now), self.line)
