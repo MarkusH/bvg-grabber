@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from bvggrabber.api import QueryApi, Departure
 
 
-ACTUAL_QUERY_API_ENDPOINT = 'http://mobil.bvg.de/IstAbfahrtzeiten/index/mobil'
+ACTUAL_API_ENDPOINT = 'http://mobil.bvg.de/IstAbfahrtzeiten/index/mobil'
 
 
 class ActualDepartureQueryApi(QueryApi):
@@ -23,7 +23,7 @@ class ActualDepartureQueryApi(QueryApi):
 
     def call(self):
         params = {'input': self.station_enc}
-        response = requests.get(ACTUAL_QUERY_API_ENDPOINT, params=params)
+        response = requests.get(ACTUAL_API_ENDPOINT, params=params)
         if response.status_code == requests.codes.ok:
             soup = BeautifulSoup(response.text)
             if soup.find_all('form'):
@@ -38,7 +38,8 @@ class ActualDepartureQueryApi(QueryApi):
                     return (False, [])
             else:
                 # The station seems to exist
-                result = soup.find('div', {'id': '', 'class': 'ivu_result_box'})
+                result = soup.find('div', {'id': '',
+                                           'class': 'ivu_result_box'})
                 if result is None:
                     return (False, [])
                 rows = result.find_all('tr')

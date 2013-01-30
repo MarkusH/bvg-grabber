@@ -10,7 +10,7 @@ from bvggrabber.api import QueryApi, Departure, hourformat
 from bvggrabber.utils.format import int2bin
 
 
-SCHEDULED_QUERY_API_ENDPOINT = 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox'
+SCHEDULED_API_ENDPOINT = 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox'
 
 
 class Vehicle():
@@ -48,7 +48,7 @@ class ScheduledDepartureQueryApi(QueryApi):
                   'productsFilter': self.vehicles,
                   'maxJourneys': self.limit,
                   'start': 'yes'}
-        response = requests.get(SCHEDULED_QUERY_API_ENDPOINT, params=params)
+        response = requests.get(SCHEDULED_API_ENDPOINT, params=params)
         if response.status_code == requests.codes.ok:
             soup = BeautifulSoup(response.text)
             if soup.find('span', 'error'):
