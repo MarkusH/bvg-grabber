@@ -43,8 +43,8 @@ class ScheduledDepartureQueryApi(QueryApi):
     def call(self):
 
         params = {'input': self.station_enc,
-                  'time': hourformat(datetime.datetime.now()),
-                  'date': datetime.datetime.now().strftime('%d.%m.%Y'),
+                  'time': timeformat(datetime.datetime.now()),
+                  'date': dateformat(datetime.datetime.now()),
                   'productsFilter': self.vehicles,
                   'maxJourneys': self.limit,
                   'start': 'yes'}

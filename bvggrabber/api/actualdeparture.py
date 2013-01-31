@@ -47,7 +47,7 @@ class ActualDepartureQueryApi(QueryApi):
                 for row in rows:
                     td = row.find_all('td')
                     if td:
-                        dep = Departure(start=self.station_enc,
+                        dep = Departure(start=self.station,
                                         end=td[2].text.strip(),
                                         when=td[0].text.strip(),
                                         line=td[1].text.strip())

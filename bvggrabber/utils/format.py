@@ -12,7 +12,7 @@ def fullformat(dt):
     return dt.strftime('%Y-%m-%d %H:%M:%S')
 
 
-def hourformat(dt):
+def timeformat(dt):
     """Formats a datetime object as HH:MM
 
     :param datetime dt: The datetime.datetime object to format
@@ -21,6 +21,17 @@ def hourformat(dt):
 
     """
     return dt.strftime('%H:%M')
+
+
+def dateformat(dt):
+    """Formats a datetime object as dd.mm.yyyy
+
+    :param datetime dt: The datetime.datetime object to format
+    :return: A formattet string
+    :rtype: str
+
+    """
+    return dt.strftime('%d.%m.%Y')
 
 
 def int2bin(i, length=8):

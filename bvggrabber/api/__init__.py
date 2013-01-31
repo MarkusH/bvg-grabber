@@ -65,9 +65,9 @@ class Departure(object):
                            'end': self.end,
                            'line': self.line,
                            'now_full': fullformat(self.now),
-                           'now_hour': hourformat(self.now),
+                           'now_hour': timeformat(self.now),
                            'when_full': fullformat(self.when),
-                           'when_hour': hourformat(self.when),
+                           'when_hour': timeformat(self.when),
                            'remaining': round(self.remaining)})
 
     def __eq__(self, other):
@@ -92,5 +92,5 @@ class Departure(object):
 
     def __str__(self):
         return "Start: %s, End: %s, when: %s, now: %s, line: %s" % (
-            self.start, self.end, hourformat(self.when),
-            hourformat(self.now), self.line)
+            self.start, self.end, timeformat(self.when),
+            timeformat(self.now), self.line)
