@@ -2,8 +2,7 @@
 import datetime
 import unittest
 
-from bvggrabber.api import fullformat, hourformat
-from bvggrabber.utils.format import int2bin
+from bvggrabber.utils.format import int2bin, fullformat, dateformat, timeformat
 
 
 class TestFormats(unittest.TestCase):
@@ -21,11 +20,12 @@ class TestFormats(unittest.TestCase):
 
     def test_datetime_formats(self):
         f = [(datetime.datetime(2013, 1, 2, 3, 4, 0),
-              "2013-01-02 03:04:00", "03:04"),
-             (datetime.datetime(2013, 1, 2),
-              "2013-01-02 00:00:00", "00:00"),
-             (datetime.datetime(2013, 1, 2, 3, 4, 30),
-              "2013-01-02 03:04:30", "03:04")]
-        for dt, sf, sh in f:
+              "2013-01-02 03:04:00", "03:04", "02.01.2013"),
+             (datetime.datetime(2013, 5, 2),
+              "2013-05-02 00:00:00", "00:00", "02.05.2013"),
+             (datetime.datetime(2013, 2, 2, 3, 4, 30),
+              "2013-02-02 03:04:30", "03:04", "02.02.2013")]
+        for dt, sf, st, sd in f:
             self.assertEqual(fullformat(dt), sf)
-            self.assertEqual(hourformat(dt), sh)
+            self.assertEqual(dateformat(dt), sd)
+            self.assertEqual(timeformat(dt), st)
