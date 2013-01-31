@@ -2,7 +2,7 @@
 import datetime
 import unittest
 
-from bvggrabber.utils.format import int2bin, fullformat, dateformat, timeformat
+from bvggrabber.utils.format import dateformat, fullformat, int2bin, timeformat
 
 
 class TestFormats(unittest.TestCase):

@@ -8,7 +8,7 @@ from math import floor
 
 from dateutil.parser import parse
 
-from bvggrabber.utils.format import hourformat, fullformat
+from bvggrabber.utils.format import fullformat, timeformat
 
 
 def compute_remaining(start, end):

@@ -5,9 +5,9 @@ import datetime
 
 from bs4 import BeautifulSoup
 
-from bvggrabber.api import QueryApi, Departure, hourformat
+from bvggrabber.api import QueryApi, Departure
 
-from bvggrabber.utils.format import int2bin
+from bvggrabber.utils.format import dateformat, int2bin, timeformat
 
 
 SCHEDULED_API_ENDPOINT = 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox'

@@ -1,37 +1,26 @@
 #-*- coding: utf-8 -*-
 
 
-def fullformat(dt):
-    """Formats a datetime object as YYYY-MM-DD HH:MM:SS
-
-    :param datetime dt: The datetime.datetime object to format
-    :return: A formattet string
-    :rtype: str
-
-    """
-    return dt.strftime('%Y-%m-%d %H:%M:%S')
-
-
-def timeformat(dt):
-    """Formats a datetime object as HH:MM
-
-    :param datetime dt: The datetime.datetime object to format
-    :return: A formattet string
-    :rtype: str
-
-    """
-    return dt.strftime('%H:%M')
-
-
 def dateformat(dt):
     """Formats a datetime object as dd.mm.yyyy
 
     :param datetime dt: The datetime.datetime object to format
-    :return: A formattet string
+    :return: A formatted string
     :rtype: str
 
     """
     return dt.strftime('%d.%m.%Y')
+
+
+def fullformat(dt):
+    """Formats a datetime object as YYYY-MM-DD HH:MM:SS
+
+    :param datetime dt: The datetime.datetime object to format
+    :return: A formatted string
+    :rtype: str
+
+    """
+    return dt.strftime('%Y-%m-%d %H:%M:%S')
 
 
 def int2bin(i, length=8):
@@ -49,3 +38,14 @@ def int2bin(i, length=8):
     if not isinstance(length, int):
         raise ValueError("expected int for length")
     return ('{:0>' + str(length) + 'b}').format(i)
+
+
+def timeformat(dt):
+    """Formats a datetime object as HH:MM
+
+    :param datetime dt: The datetime.datetime object to format
+    :return: A formatted string
+    :rtype: str
+
+    """
+    return dt.strftime('%H:%M')
