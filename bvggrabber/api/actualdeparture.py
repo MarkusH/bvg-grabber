@@ -24,7 +24,7 @@ class ActualDepartureQueryApi(QueryApi):
     def call(self):
         params = {'input': self.station_enc}
         response = requests.get(ACTUAL_API_ENDPOINT, params=params)
-        if response.status_code == requests.codes.ok:
+        if response.ok:
             soup = BeautifulSoup(response.text)
             if soup.find_all('form'):
                 # The station we are looking for is ambiguous or does not exist
@@ -32,16 +32,16 @@ class ActualDepartureQueryApi(QueryApi):
                 if stations:
                     # The station is ambiguous
                     stationlist = [s.get('value') for s in stations]
-                    return (False, stationlist)
+                    return Response(False, stationlist)
                 else:
                     # The station does not exist
-                    return (False, [])
+                    return Response(False, [])
             else:
                 # The station seems to exist
                 result = soup.find('div', {'id': '',
                                            'class': 'ivu_result_box'})
                 if result is None:
-                    return (False, [])
+                    return Response(False, [])
                 rows = result.find_all('tr')
                 departures = []
                 for row in rows:
@@ -52,6 +52,11 @@ class ActualDepartureQueryApi(QueryApi):
                                         when=td[0].text.strip(),
                                         line=td[1].text.strip())
                         departures.append(dep)
-                return (True, departures)
+                return Response(True, departures)
         else:
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except RequestException as e:
+                return Response(False, [], e)
+            else:
+                return Response(False, [], Exception("An unknown error occured"))

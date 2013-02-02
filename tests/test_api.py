@@ -3,7 +3,7 @@ import datetime
 import json
 import unittest
 
-from bvggrabber.api import QueryApi, Departure, compute_remaining
+from bvggrabber.api import QueryApi, Departure, Response, compute_remaining
 from bvggrabber.utils.format import fullformat
 
 
@@ -40,6 +40,36 @@ class TestFunctions(unittest.TestCase):
                           datetime.datetime(2013, 1, 2, 3, 4, 0), 1357092241)
         self.assertRaises(ValueError, compute_remaining,
                           1357092240, 1357092241)
+
+
+class TestResponse(unittest.TestCase):
+
+    def test_merge(self):
+        departures = [ Departure("ERP",
+                                 "HBF",
+                                 datetime.datetime(2013, 1, 2, 3, 4, 1),
+                                 "U2"),
+                       Departure("HBF",
+                                 "ERP",
+                                 datetime.datetime(2013, 2, 1, 3, 4, 1),
+                                 "U55")]
+        departures2 = [ Departure("ERP",
+                                 "HBF",
+                                 datetime.datetime(2013, 1, 2, 3, 4, 1),
+                                 "U6"),
+                       Departure("HBF",
+                                 "ERP",
+                                 datetime.datetime(2013, 2, 1, 3, 4, 1),
+                                 "U9")]
+        allDepartures = departures + departures2
+        r1 = Response(True, departures)
+        r2 = Response(True, departures2)
+        r3 = Response(False, [])
+        self.assertRaises(ValueError, r1.merge, r3)
+        self.assertRaises(ValueError, r3.merge, r2)
+        self.assertRaises(TypeError, r1.merge, departures)
+        r1.merge(r2)
+        self.assertEqual(r1.departures, allDepartures)
 
 
 class TestQueryApi(unittest.TestCase):

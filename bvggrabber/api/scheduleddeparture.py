@@ -5,7 +5,7 @@ import datetime
 
 from bs4 import BeautifulSoup
 
-from bvggrabber.api import QueryApi, Departure
+from bvggrabber.api import QueryApi, Departure, Response
 
 from bvggrabber.utils.format import dateformat, int2bin, timeformat
 
@@ -37,7 +37,7 @@ class ScheduledDepartureQueryApi(QueryApi):
         else:
             raise ValueError("Invalid type for station")
         self.station = station
-        self.vehicles = int2bin(vehicles)
+        self.vehicles = int2bin(vehicles, 7)
         self.limit = limit
 
     def call(self):
@@ -49,7 +49,7 @@ class ScheduledDepartureQueryApi(QueryApi):
                   'maxJourneys': self.limit,
                   'start': 'yes'}
         response = requests.get(SCHEDULED_API_ENDPOINT, params=params)
-        if response.status_code == requests.codes.ok:
+        if response.ok:
             soup = BeautifulSoup(response.text)
             if soup.find('span', 'error'):
                 # The station we are looking for is ambiguous or does not exist
@@ -57,15 +57,15 @@ class ScheduledDepartureQueryApi(QueryApi):
                 if stations:
                     # The station is ambiguous
                     stationlist = [s.text.strip() for s in stations]
-                    return (False, stationlist)
+                    return Response(False, stationlist)
                 else:
                     # The station does not exist
-                    return (False, [])
+                    return Response(False, [])
             else:
                 # The station seems to exist
                 tbody = soup.find('tbody')
                 if tbody is None:
-                    return (False, [])
+                    return Response(False, [])
                 rows = tbody.find_all('tr')
                 departures = []
                 for row in rows:
@@ -75,6 +75,11 @@ class ScheduledDepartureQueryApi(QueryApi):
                                     when=tds[0].text.strip(),
                                     line=tds[1].text.strip())
                     departures.append(dep)
-                return (True, departures)
+                return Response(True, departures)
         else:
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except RequestException as e:
+                return Response(False, [], e)
+            else:
+                return Response(False, [], Exception("An unknown error occured"))
