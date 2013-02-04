@@ -61,9 +61,10 @@ class TestResponse(unittest.TestCase):
                                  "ERP",
                                  datetime.datetime(2013, 2, 1, 3, 4, 1),
                                  "U9")]
-        allDepartures = departures + departures2
-        r1 = Response(True, departures)
-        r2 = Response(True, departures2)
+        allDepartures = [("Marchbrücke", departures),
+                         ("S Tiergarten", departures2)]
+        r1 = Response(True, "Marchbrücke", departures)
+        r2 = Response(True, "S Tiergarten", departures2)
         r3 = Response(False, [])
         self.assertRaises(ValueError, r1.merge, r3)
         self.assertRaises(ValueError, r3.merge, r2)
@@ -205,7 +206,7 @@ class TestDeparture(BaseTestDeparture):
         self.assertRaises(TypeError, Departure, "from", "to", ["when"], "line")
         self.assertIsInstance(Departure("from", "to", "16:15\n \t*", "line"),
                               Departure)
-
+    @unittest.skip("removed json from object")
     def test_json(self):
         json1 = {'start': "From My Station",
                  'end': "To Your Station",

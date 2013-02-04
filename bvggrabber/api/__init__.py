@@ -9,6 +9,7 @@ from math import floor
 from dateutil.parser import parse
 
 from bvggrabber.utils.format import fullformat, timeformat
+from bvggrabber.utils.json import ObjectJSONEncoder
 
 
 def compute_remaining(start, end):
@@ -32,9 +33,9 @@ class QueryApi(object):
 
 class Response(object):
 
-    def __init__(self, state, departures, error=None):
+    def __init__(self, state, station=None, departures=None, error=None):
         self._state = state
-        self._departures = departures
+        self._departures = [(station, departures)]
         self._error = error
 
     def merge(self, other):
@@ -47,6 +48,10 @@ class Response(object):
                 self.departures.extend(other.departures)
         else:
             raise TypeError("The given object is not a response object")
+
+    @property
+    def to_json(self):
+        return ObjectJSONEncoder(ensure_ascii=False).encode(self.departures)
 
     @property
     def state(self):
@@ -88,18 +93,7 @@ class Departure(object):
 
     @property
     def remaining(self):
-        return compute_remaining(self.now, self.when)
-
-    @property
-    def to_json(self):
-        return json.dumps({'start': self.start,
-                           'end': self.end,
-                           'line': self.line,
-                           'now_full': fullformat(self.now),
-                           'now_hour': timeformat(self.now),
-                           'when_full': fullformat(self.when),
-                           'when_hour': timeformat(self.when),
-                           'remaining': round(self.remaining)})
+        return int(compute_remaining(self.now, self.when))
 
     def __eq__(self, other):
         """Two departures are assumed to be equal iff their remaining time

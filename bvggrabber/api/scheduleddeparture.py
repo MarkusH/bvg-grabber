@@ -5,9 +5,9 @@ import datetime
 
 from bs4 import BeautifulSoup
 
-from bvggrabber.api import QueryApi, Departure, Response
+from bvggrabber.api import QueryApi, Departure, Response, timeformat
 
-from bvggrabber.utils.format import dateformat, int2bin, timeformat
+from bvggrabber.utils.format import dateformat, int2bin
 
 
 SCHEDULED_API_ENDPOINT = 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox'
@@ -75,7 +75,7 @@ class ScheduledDepartureQueryApi(QueryApi):
                                     when=tds[0].text.strip(),
                                     line=tds[1].text.strip())
                     departures.append(dep)
-                return Response(True, departures)
+                return Response(True, self.station, departures)
         else:
             try:
                 response.raise_for_status()

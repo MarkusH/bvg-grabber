@@ -3,7 +3,7 @@ import requests
 
 from bs4 import BeautifulSoup
 
-from bvggrabber.api import QueryApi, Departure
+from bvggrabber.api import QueryApi, Departure, Response
 
 
 ACTUAL_API_ENDPOINT = 'http://mobil.bvg.de/IstAbfahrtzeiten/index/mobil'
@@ -52,7 +52,7 @@ class ActualDepartureQueryApi(QueryApi):
                                         when=td[0].text.strip(),
                                         line=td[1].text.strip())
                         departures.append(dep)
-                return Response(True, departures)
+                return Response(True, self.station, departures)
         else:
             try:
                 response.raise_for_status()
