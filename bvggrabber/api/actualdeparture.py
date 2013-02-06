@@ -35,7 +35,7 @@ class ActualDepartureQueryApi(QueryApi):
                     return Response(False, stationlist)
                 else:
                     # The station does not exist
-                    return Response(False, [])
+                    return Response(False)
             else:
                 # The station seems to exist
                 result = soup.find('div', {'id': '',
@@ -45,18 +45,19 @@ class ActualDepartureQueryApi(QueryApi):
                 rows = result.find_all('tr')
                 departures = []
                 for row in rows:
-                    td = row.find_all('td')
-                    if td:
-                        dep = Departure(start=self.station,
-                                        end=td[2].text.strip(),
-                                        when=td[0].text.strip(),
-                                        line=td[1].text.strip())
-                        departures.append(dep)
+                    if row.parent.name == 'tbody':
+                        td = row.find_all('td')
+                        if td:
+                            dep = Departure(start=self.station,
+                                            end=td[2].text.strip(),
+                                            when=td[0].text.strip(),
+                                            line=td[1].text.strip())
+                            departures.append(dep)
                 return Response(True, self.station, departures)
         else:
             try:
                 response.raise_for_status()
             except RequestException as e:
-                return Response(False, [], e)
+                return Response(False, error=e)
             else:
-                return Response(False, [], Exception("An unknown error occured"))
+                return Response(False, error=Exception("An unknown error occured"))
