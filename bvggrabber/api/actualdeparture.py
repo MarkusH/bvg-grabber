@@ -57,7 +57,8 @@ class ActualDepartureQueryApi(QueryApi):
         else:
             try:
                 response.raise_for_status()
-            except RequestException as e:
+            except requests.RequestException as e:
                 return Response(False, error=e)
             else:
-                return Response(False, error=Exception("An unknown error occured"))
+                return Response(False,
+                                error=Exception("An unknown error occured"))
