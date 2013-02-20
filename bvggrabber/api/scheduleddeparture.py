@@ -29,6 +29,7 @@ class Vehicle():
 class ScheduledDepartureQueryApi(QueryApi):
 
     def __init__(self, station, vehicles=Vehicle._ALL, limit=5):
+        """:param Vehicle vehicles: a bitmask described by :class:`Vehicle`"""
         super(ScheduledDepartureQueryApi, self).__init__()
         if isinstance(station, str):
             self.station_enc = station.encode('iso-8859-1')
@@ -41,7 +42,6 @@ class ScheduledDepartureQueryApi(QueryApi):
         self.limit = limit
 
     def call(self):
-
         params = {'input': self.station_enc,
                   'time': timeformat(datetime.datetime.now()),
                   'date': dateformat(datetime.datetime.now()),

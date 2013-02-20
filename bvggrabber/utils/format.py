@@ -2,9 +2,10 @@
 
 
 def dateformat(dt):
-    """Formats a datetime object as dd.mm.yyyy
+    """Formats a :class:`datetime.datetime` object as dd.mm.yyyy
 
-    :param datetime dt: The datetime.datetime object to format
+    :param datetime.datetime dt: The :class:`datetime.datetime` object to
+        format
     :return: A formatted string
     :rtype: str
 
@@ -13,9 +14,10 @@ def dateformat(dt):
 
 
 def fullformat(dt):
-    """Formats a datetime object as YYYY-MM-DD HH:MM:SS
+    """Formats a :class:`datetime.datetime` object as YYYY-MM-DD HH:MM:SS
 
-    :param datetime dt: The datetime.datetime object to format
+    :param datetime.datetime dt: The :class:`datetime.datetime` object to
+        format
     :return: A formatted string
     :rtype: str
 
@@ -26,7 +28,7 @@ def fullformat(dt):
 def int2bin(i, length=8):
     """Returns the bit representation of the given integer with a minimum
     length of ``length``. E.g. ``int2bin(109, 7) == '1101101'`` and
-    ``int2bin(109, 8) == '01101101'.
+    ``int2bin(109, 8) == '01101101'``.
 
     :param int i: The integer to format
     :param int length: The minimum length of the output string. The string is
@@ -41,9 +43,10 @@ def int2bin(i, length=8):
 
 
 def timeformat(dt):
-    """Formats a datetime object as HH:MM
+    """Formats a :class:`datetime.datetime` object as HH:MM
 
-    :param datetime dt: The datetime.datetime object to format
+    :param datetime.datetime dt: The :class:`datetime.datetime` object to
+        format
     :return: A formatted string
     :rtype: str
 
