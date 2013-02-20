@@ -34,33 +34,25 @@ class TestFunctions(unittest.TestCase):
                                      fullformat(s), fullformat(e), t))
 
     def test_compute_remaining_error(self):
-        self.assertRaises(ValueError, compute_remaining,
+        self.assertRaises(TypeError, compute_remaining,
                           1357092240, datetime.datetime(2013, 1, 2, 3, 4, 1))
-        self.assertRaises(ValueError, compute_remaining,
+        self.assertRaises(TypeError, compute_remaining,
                           datetime.datetime(2013, 1, 2, 3, 4, 0), 1357092241)
-        self.assertRaises(ValueError, compute_remaining,
+        self.assertRaises(TypeError, compute_remaining,
                           1357092240, 1357092241)
 
 
 class TestResponse(unittest.TestCase):
 
     def test_merge(self):
-        departures = [ Departure("ERP",
-                                 "HBF",
-                                 datetime.datetime(2013, 1, 2, 3, 4, 1),
-                                 "U2"),
-                       Departure("HBF",
-                                 "ERP",
-                                 datetime.datetime(2013, 2, 1, 3, 4, 1),
-                                 "U55")]
-        departures2 = [ Departure("ERP",
-                                 "HBF",
-                                 datetime.datetime(2013, 1, 2, 3, 4, 1),
-                                 "U6"),
-                       Departure("HBF",
-                                 "ERP",
-                                 datetime.datetime(2013, 2, 1, 3, 4, 1),
-                                 "U9")]
+        departures = [Departure("ERP", "HBF",
+                                datetime.datetime(2013, 1, 2, 3, 4, 1), "U2"),
+                      Departure("HBF", "ERP",
+                                datetime.datetime(2013, 2, 1, 3, 4, 1), "U55")]
+        departures2 = [Departure("ERP", "HBF",
+                                 datetime.datetime(2013, 1, 2, 3, 4, 1), "U6"),
+                       Departure("HBF", "ERP",
+                                 datetime.datetime(2013, 2, 1, 3, 4, 1), "U9")]
         allDepartures = [("Marchbrücke", departures),
                          ("S Tiergarten", departures2)]
         r1 = Response(True, "Marchbrücke", departures)
@@ -206,6 +198,7 @@ class TestDeparture(BaseTestDeparture):
         self.assertRaises(TypeError, Departure, "from", "to", ["when"], "line")
         self.assertIsInstance(Departure("from", "to", "16:15\n \t*", "line"),
                               Departure)
+
     @unittest.skip("removed json from object")
     def test_json(self):
         json1 = {'start': "From My Station",
@@ -251,19 +244,19 @@ class TestDeparture(BaseTestDeparture):
 
         mitday_current_day = datetime.datetime(2013, 1, 2, 11, 59, 0)
         departure = Departure("From My Station", "To Your Station",
-                               mitday_current_day, "A Line", since=now)
+                              mitday_current_day, "A Line", since=now)
         self.assertEqual(departure.remaining, -43200)
         departure = Departure("From My Station", "To Your Station",
-                               mitday_current_day, "A Line", since=now,
-                               no_add_day=True)
+                              mitday_current_day, "A Line", since=now,
+                              no_add_day=True)
 
         mitday_next_day = datetime.datetime(2013, 1, 2, 11, 58, 59)
         departure = Departure("From My Station", "To Your Station",
-                               mitday_next_day, "A Line", since=now)
+                              mitday_next_day, "A Line", since=now)
         self.assertEqual(departure.remaining, 43140)
         departure = Departure("From My Station", "To Your Station",
-                               mitday_next_day, "A Line", since=now,
-                               no_add_day=True)
+                              mitday_next_day, "A Line", since=now,
+                              no_add_day=True)
         self.assertEqual(departure.remaining, -43260)
 
 

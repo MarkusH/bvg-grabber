@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import datetime
-import json
 import re
 
 from functools import total_ordering
@@ -8,15 +7,32 @@ from math import floor
 
 from dateutil.parser import parse
 
-from bvggrabber.utils.format import fullformat, timeformat
+from bvggrabber.utils.format import timeformat
 from bvggrabber.utils.json import ObjectJSONEncoder
 
 
 def compute_remaining(start, end):
+    """Compute the number of seconds between ``start`` and ``end`` and return
+    the number of seconds rounded down to entire minutes. That means:
+
+    * [0, 59] => 0
+    * [60, 119] => 60
+    * [120, 179] => 120
+    * [-59, -1] => -60
+    * [-119, -60] => -120
+
+    :param datetime.datetime start: The start to compute the remaining number
+        of minutes.
+    :param datetime.datetime end: The end of the interval
+    :raises: TypeError if either of ``start`` or ``end`` is not a
+        ``datetime.datetime``.
+    :return: The number of remaining seconds rounded to entire minutes
+    :rtype: int
+    """
     if not isinstance(start, datetime.datetime):
-        raise ValueError("start needs to be a datetime.datetime")
+        raise TypeError("start needs to be a datetime.datetime")
     if not isinstance(end, datetime.datetime):
-        raise ValueError("start needs to be a datetime.datetime")
+        raise TypeError("start needs to be a datetime.datetime")
     seconds = (end - start).total_seconds()
     return datetime.timedelta(minutes=floor(seconds / 60)).total_seconds()
 
@@ -27,6 +43,7 @@ class QueryApi(object):
         pass
 
     def call(self):
+        """Needs to be implemented by inheriting classes!"""
         raise NotImplementedError("The inheriting class needs to implement "
                                   "the call() method!")
 
@@ -41,9 +58,11 @@ class Response(object):
     def merge(self, other):
         if isinstance(other, Response):
             if not other.state:
-                raise ValueError("The response contains errors: " + str(other.error))
+                raise ValueError("The response contains errors: " +
+                                 str(other.error))
             elif not self.state:
-                raise ValueError("The response contains errors: " + str(self.error))
+                raise ValueError("The response contains errors: " +
+                                 str(self.error))
             else:
                 self.departures.extend(other.departures)
         else:
@@ -51,11 +70,11 @@ class Response(object):
 
     @property
     def to_json(self):
+        """
+        .. deprecated:: 0.0.1
+           Use :attr:`json` instead.
+        """
         return ObjectJSONEncoder(ensure_ascii=False).encode(self.departures)
-
-    @property
-    def state(self):
-        return self._state
 
     @property
     def departures(self):
@@ -65,11 +84,36 @@ class Response(object):
     def error(self):
         return self._error
 
+    @property
+    def json(self):
+        return ObjectJSONEncoder(ensure_ascii=False).encode(self.departures)
+
+    @property
+    def state(self):
+        return self._state
+
 
 @total_ordering
 class Departure(object):
 
-    def __init__(self, start, end, when, line, since=None):
+    def __init__(self, start, end, when, line, since=None, no_add_day=False):
+        """
+        :param str start: The start station
+        :param str end: The end station
+        :param when: The leaving time of the public transport at the given
+            ``start`` station. Might be an :class:`int` (timestamp), a
+            :class:`datetime.datetime` instance or a :class:`str` accepted by
+            ``dateutil.parse()``. If ``when`` is smaller than ``since`` and the
+            difference between both times is larger than 12 hours (43200sec),
+            the API will add another day unless ``no_add_day`` is ``True``.
+        :param str line: The line of the public transport
+        :param since: Either ``None`` or :class:`datetime.datetime`. Defines
+            the temporal start for searching. ``None`` will internally be
+            resolved as :meth:`datetime.datetime.now`.
+        :param bool no_add_day: If true, there no additional day will be added
+            if ``when`` is smaller than ``since``. Default ``False``.
+        :raises: :exc:`TypeError` if ``when`` is invalid or cannot be parsed.
+        """
         if since is None:
             self.now = datetime.datetime.now()
         else:
@@ -99,6 +143,7 @@ class Departure(object):
 
     @property
     def remaining(self):
+        """.. seealso:: bvggrabber.api.compute_remaining"""
         return int(compute_remaining(self.now, self.when))
 
     def __eq__(self, other):
