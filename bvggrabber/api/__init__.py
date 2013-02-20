@@ -82,14 +82,20 @@ class Departure(object):
             # We assume to get a UNIX / POSIX timestamp
             self.when = datetime.datetime.fromtimestamp(when)
         elif isinstance(when, str):
+            # We need to parse a string. But we need to remove trailing
+            # whitespaces and *
             self.when = parse(re.sub('[\s*]$', '', when))
-            #if (self.when - self.now).total_seconds() < -60:
-            #    self.when = self.when + timedelta(days=1)
         elif isinstance(when, datetime.datetime):
+            # Everything's fine, we can just take the parameter as is
             self.when = when
         else:
             raise TypeError("when must be a valid datetime, timestamp or "
                             "string!")
+        diff = abs((self.when - self.now).total_seconds())
+        if not no_add_day and self.when < self.now and diff > 43200:
+            # 43200 are 12 hours in seconds So we accept a offset of 12 hours
+            # that is still counted as "time gone" for the current day.
+            self.when = self.when + datetime.timedelta(days=1)
 
     @property
     def remaining(self):

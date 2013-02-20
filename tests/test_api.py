@@ -238,6 +238,34 @@ class TestDeparture(BaseTestDeparture):
                "now: 03:04, line: A Line"
         self.assertEqual(str2, str(dep2))
 
+    def test_regression_new_day(self):
+        now = datetime.datetime(2013, 1, 2, 23, 59, 0)
+
+        dep = datetime.datetime(2013, 1, 2, 0, 1, 2)
+        departure = Departure("From My Station", "To Your Station", dep,
+                              "A Line", since=now)
+        self.assertEqual(departure.remaining, 120)
+        departure = Departure("From My Station", "To Your Station", dep,
+                              "A Line", since=now, no_add_day=True)
+        self.assertEqual(departure.remaining, -86280)
+
+        mitday_current_day = datetime.datetime(2013, 1, 2, 11, 59, 0)
+        departure = Departure("From My Station", "To Your Station",
+                               mitday_current_day, "A Line", since=now)
+        self.assertEqual(departure.remaining, -43200)
+        departure = Departure("From My Station", "To Your Station",
+                               mitday_current_day, "A Line", since=now,
+                               no_add_day=True)
+
+        mitday_next_day = datetime.datetime(2013, 1, 2, 11, 58, 59)
+        departure = Departure("From My Station", "To Your Station",
+                               mitday_next_day, "A Line", since=now)
+        self.assertEqual(departure.remaining, 43140)
+        departure = Departure("From My Station", "To Your Station",
+                               mitday_next_day, "A Line", since=now,
+                               no_add_day=True)
+        self.assertEqual(departure.remaining, -43260)
+
 
 class TestDepartureTotalOrder(unittest.TestCase):
 
