@@ -170,3 +170,6 @@ class Departure(object):
         return "Start: %s, End: %s, when: %s, now: %s, line: %s" % (
             self.start, self.end, timeformat(self.when),
             timeformat(self.now), self.line)
+
+    def __repr__(self):
+        return self.__str__()
