@@ -4,6 +4,8 @@ import codecs
 from os import path
 from setuptools import setup, find_packages
 
+from bvggrabber import get_version
+
 BASEDIR = path.dirname(__file__)
 
 open = lambda filepath: codecs.open(filepath, 'r', 'utf-8')
@@ -15,7 +17,7 @@ setup(
     name='bvg-grabber',
     description='Querying the upcoming public transport departures in Berlin',
     long_description=description,
-    version='0.1a1',
+    version=get_version(),
     url='https://github.com/Markush2010/bvg-grabber',
     author='Christian Struck, Markus Holtermann',
     author_email='',
