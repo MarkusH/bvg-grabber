@@ -4,7 +4,7 @@ import os
 import subprocess
 
 
-VERSION = (0, 1, 0, 'beta', 1)
+VERSION = (0, 1, 0, 'beta', 2)
 
 
 def get_version():
