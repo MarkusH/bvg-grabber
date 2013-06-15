@@ -26,6 +26,7 @@ setup(
     include_package_data=True,
     install_requires=requirements,
     test_suite="tests",
+    scripts=['bvg-grabber.py'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
