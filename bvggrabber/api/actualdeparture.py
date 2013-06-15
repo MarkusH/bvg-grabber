@@ -41,7 +41,7 @@ class ActualDepartureQueryApi(QueryApi):
                 result = soup.find('div', {'id': '',
                                            'class': 'ivu_result_box'})
                 if result is None:
-                    return Response(False, [])
+                    return Response(True, self.station, [])
                 rows = result.find_all('tr')
                 departures = []
                 for row in rows:

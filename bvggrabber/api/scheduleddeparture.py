@@ -65,7 +65,7 @@ class ScheduledDepartureQueryApi(QueryApi):
                 # The station seems to exist
                 tbody = soup.find('tbody')
                 if tbody is None:
-                    return Response(False, [])
+                    return Response(True, self.station, [])
                 rows = tbody.find_all('tr')
                 departures = []
                 for row in rows:
