@@ -1,2 +1,4 @@
+include AUTHORS
+include LICENSE
 include requirements.txt
 include README.rst

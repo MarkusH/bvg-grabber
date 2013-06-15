@@ -22,7 +22,7 @@ setup(
     author='Christian Struck, Markus Holtermann',
     author_email='',
     license='BSD',
-    packages=find_packages(exclude=['example', 'tests']),
+    packages=find_packages(exclude=['tests']),
     include_package_data=True,
     install_requires=requirements,
     test_suite="tests",
