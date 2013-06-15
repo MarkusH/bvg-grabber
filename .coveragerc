@@ -1,2 +1,4 @@
 [run]
-source=bvggrabber
+branch = True
+source = bvggrabber/
+omit = bvggrabber/__init__.py

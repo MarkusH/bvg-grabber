@@ -44,6 +44,21 @@ class TestFunctions(unittest.TestCase):
 
 class TestResponse(unittest.TestCase):
 
+    def test_init_ambiguous(self):
+        response = Response(False, ['s1', 's2'])
+        self.assertFalse(response.state)
+        self.assertEqual(str(response.error), "Station is ambiguous: s1, s2")
+
+    def test_init_not_found(self):
+        response = Response(False)
+        self.assertFalse(response.state)
+        self.assertEqual(str(response.error), "Station does not exist")
+
+    def test_init_error_string(self):
+        response = Response(False, error="An error occurred")
+        self.assertFalse(response.state)
+        self.assertEqual(str(response.error), "An error occurred")
+
     def test_merge(self):
         departures = [Departure("ERP", "HBF",
                                 datetime.datetime(2013, 1, 2, 3, 4, 1), "U2"),
@@ -63,6 +78,37 @@ class TestResponse(unittest.TestCase):
         self.assertRaises(TypeError, r1.merge, departures)
         r1.merge(r2)
         self.assertEqual(r1.departures, allDepartures)
+
+    def test_json_success(self):
+        since = datetime.datetime(2013, 1, 2, 3, 0, 0)
+        departures = [Departure("ZOO", "HBF",
+                                datetime.datetime(2013, 1, 2, 3, 4, 0), "S5",
+                                since=since),
+                      Departure("ZOO", "ERP",
+                                datetime.datetime(2013, 1, 2, 3, 5, 0), "U2",
+                                since=since)]
+        json1 = [['ZOO', [{
+                'start': 'ZOO',
+                'line': 'S5',
+                'end': 'HBF',
+                'remaining': 240, 
+            }, {
+                'start': 'ZOO',
+                'line': 'U2',
+                'end': 'ERP',
+                'remaining': 300, 
+            },
+        ]]]
+        response = Response(True, "ZOO", departures)
+        self.assertEqual(json.loads(response.json), json1)
+
+    def test_json_failure(self):
+        response = Response(False, ['ERP', 'ZOO'])
+        self.assertEqual(response.json, json.dumps("Station is ambiguous: ERP, ZOO"))
+
+    def test_departures_failure(self):
+        response = Response(False, ['ERP', 'ZOO'])
+        self.assertEqual(response.departures, "Station is ambiguous: ERP, ZOO")
 
 
 class TestQueryApi(unittest.TestCase):
@@ -199,38 +245,6 @@ class TestDeparture(BaseTestDeparture):
         self.assertIsInstance(Departure("from", "to", "16:15\n \t*", "line"),
                               Departure)
 
-    @unittest.skip("removed json from object")
-    def test_json(self):
-        json1 = {'start': "From My Station",
-                 'end': "To Your Station",
-                 'line': "A Line",
-                 'now_full': "2013-01-02 03:04:00",
-                 'now_hour': "03:04",
-                 'when_full': "2013-01-02 03:04:45",
-                 'when_hour': "03:04",
-                 'remaining': 0}
-        dep1 = Departure("From My Station", "To Your Station",
-                         self.since + self.delta1, "A Line", since=self.since)
-        self.assertEqual(json1, json.loads(dep1.to_json))
-        str1 = "Start: From My Station, End: To Your Station, when: 03:04, " \
-               "now: 03:04, line: A Line"
-        self.assertEqual(str1, str(dep1))
-
-        json2 = {'start': "From My Station",
-                 'end': "To Your Station",
-                 'line': "A Line",
-                 'now_full': "2013-01-02 03:04:00",
-                 'now_hour': "03:04",
-                 'when_full': "2013-01-02 03:05:20",
-                 'when_hour': "03:05",
-                 'remaining': 60}
-        dep2 = Departure("From My Station", "To Your Station",
-                         self.since + self.delta2, "A Line", since=self.since)
-        self.assertEqual(json2, json.loads(dep2.to_json))
-        str2 = "Start: From My Station, End: To Your Station, when: 03:05, " \
-               "now: 03:04, line: A Line"
-        self.assertEqual(str2, str(dep2))
-
     def test_regression_new_day(self):
         now = datetime.datetime(2013, 1, 2, 23, 59, 0)
 
@@ -258,6 +272,15 @@ class TestDeparture(BaseTestDeparture):
                               mitday_next_day, "A Line", since=now,
                               no_add_day=True)
         self.assertEqual(departure.remaining, -43260)
+
+    def test_str(self):
+        now = datetime.datetime(2013, 1, 2, 12, 13, 0)
+        dep = datetime.datetime(2013, 1, 2, 12, 15, 0)
+        departure = Departure("From My Station", "To Your Station", dep,
+                              "A Line", since=now)
+        string = 'Start: From My Station, End: To Your Station, when: 12:15, now: 12:13, line: A Line'
+        self.assertEqual(str(departure), string)
+        self.assertEqual(repr(departure), string)
 
 
 class TestDepartureTotalOrder(unittest.TestCase):

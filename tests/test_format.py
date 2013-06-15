@@ -17,6 +17,7 @@ class TestFormats(unittest.TestCase):
                 (0b1100011, 7, '1100011')]
         for b, l, s in nums:
             self.assertEqual(int2bin(b, l), s)
+        self.assertRaises(ValueError, int2bin, 12, 'abc')
 
     def test_datetime_formats(self):
         f = [(datetime.datetime(2013, 1, 2, 3, 4, 0),
