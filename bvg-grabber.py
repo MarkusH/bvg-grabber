@@ -56,10 +56,9 @@ if __name__ == '__main__':
         query = ActualDepartureQueryApi(args.station)
         res = query.call()
 
-    if args.file == 'stdout':
+    if args.file in ('stdout', '-'):
         print(res.to_json, file=sys.stdout)
     else:
         file = open(args.file, 'w')
         print(res.to_json, file=file)
         file.close()
-
