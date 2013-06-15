@@ -51,11 +51,51 @@ class QueryApi(object):
 class Response(object):
 
     def __init__(self, state, station=None, departures=None, error=None):
+        """Creates a new response. Returned by :meth:`QueryApi.call`
+        
+        :param bool state: ``True`` iff the request and parsing was successful,
+            ``False`` otherwise.
+        :param station: If a ``list``, the station name is ambiguous. If a
+            string the full qualified name of the station.
+        :param departures: A list of :class:`Departure`` objects
+        :param Exception error: In case an unexpected error occurred, this
+            contains the original exception.
+
+        If ``state`` is ``True``, ``station`` must be a ``str`` and
+        ``departures`` must be a list of :class:`Departure`` objects. If
+        ``state`` is ``False`` there must be several reasons for that:
+
+            1. The provided station name during the :meth:`QueryApi.call`
+               returned multiple possible departing stations. You have to
+               specify the name in an unambiguous way.
+            2. The station does not exist at all.
+            3. An exception occurred during the :meth:`QueryApi.call`
+
+        .. deprecated:: 0.1b3
+           The ``state`` argument will be removed in the future and will be
+           computed automatically based on ``station``, ``departures`` and
+           ``error``.
+        """
         self._state = state
         self._departures = [(station, departures)]
         self._error = error
+        if self._error is None:
+            if isinstance(station, list):
+                self._state = False
+                msg = ', '.join(station)
+                self._error = Exception("Station is ambiguous: %s" % msg)
+            elif station is None:
+                self._state = False
+                self._error = Exception("Station does not exist")
+        elif isinstance(self._error, str):
+            self._state = False
+            self._error = Exception(self._error)
 
     def merge(self, other):
+        """Checks that ``other`` is a :class:`Response` and extends
+        :attr:`departures` by the departures given in ``other`` iff neither
+        response object has a invalid state.
+        """
         if isinstance(other, Response):
             if not other.state:
                 raise ValueError("The response contains errors: " +
@@ -70,26 +110,40 @@ class Response(object):
 
     @property
     def to_json(self):
-        """
-        .. deprecated:: 0.0.1
+        """.. deprecated:: 0.0.1
            Use :attr:`json` instead.
         """
         return ObjectJSONEncoder(ensure_ascii=False).encode(self.departures)
 
     @property
     def departures(self):
-        return self._departures
+        """A list of 2-tuple in the form (:class:`str`, :class:`Departure`).
+        The first element in the tuple defines the departing station where the
+        second element holds a list of departure objects.
+        """
+        if self.state:
+            return self._departures
+        return str(self.error)
 
     @property
     def error(self):
+        """The error that occurred during creation or ``None``"""
         return self._error
 
     @property
     def json(self):
-        return ObjectJSONEncoder(ensure_ascii=False).encode(self.departures)
+        """Uses :class:`~bvggrabber.utils.json.ObjectJSONEncoder` to encode
+        the :attr:`departures` to a JSON format.
+        """
+        if self.state:
+            return ObjectJSONEncoder(ensure_ascii=False).encode(self.departures)
+        return ObjectJSONEncoder(ensure_ascii=False).encode(str(self.error))
 
     @property
     def state(self):
+        """``True`` iff the request and parsing was successful, ``False``
+        otherwise.
+        """
         return self._state
 
 

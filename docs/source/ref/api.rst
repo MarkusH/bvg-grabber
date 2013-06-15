@@ -21,7 +21,7 @@ Base and Main Classes
       :members: call
 
    .. autoclass:: Response
-      :members: merge, to_json, departures, error, json, state
+      :members: __init__, merge, departures, error, json, state
 
 
 Concrete Implementations
