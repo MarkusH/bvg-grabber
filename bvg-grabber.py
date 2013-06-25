@@ -46,12 +46,12 @@ if __name__ == '__main__':
         if args.limit:
             limit = args.limit
 
-        if bus:
-            aquery = ActualDepartureQueryApi(args.station)
         query = ScheduledDepartureQueryApi(args.station, vehicles, limit=limit)
         res = query.call()
-        res2 = aquery.call()
-        res.merge(res2)
+        if bus:
+            aquery = ActualDepartureQueryApi(args.station)
+            res2 = aquery.call()
+            res.merge(res2)
     else:
         query = ActualDepartureQueryApi(args.station)
         res = query.call()
@@ -62,3 +62,4 @@ if __name__ == '__main__':
         file = open(args.file, 'w')
         print(res.to_json, file=file)
         file.close()
+
