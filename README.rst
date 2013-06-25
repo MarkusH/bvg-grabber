@@ -15,8 +15,8 @@ Slides:
   http://download.markusholtermann.eu/BVG-Grabber-LightningTalk.pdf
 
 Pictures:
-  .. image:: http://media.markusholtermann.eu/img/BVG-Grabber-LightningTalk-installation1.jpg
+  .. image:: http://media.markusholtermann.eu/img/BVG-Grabber-LightningTalk-installation1tb.jpg
       :alt: Installation 1
     
-  .. image:: http://media.markusholtermann.eu/img/BVG-Grabber-LightningTalk-installation2.jpg
+  .. image:: http://media.markusholtermann.eu/img/BVG-Grabber-LightningTalk-installation2tb.jpg
       :alt: Installation 2
