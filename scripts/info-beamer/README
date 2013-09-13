@@ -1,0 +1,7 @@
+Create a crontab entry with:
+
+*/1 *    * * *   <path to bvg-grabber.py> --vehicle U BUS --limit 10 "U Ernst-Reuter-Platz (Berlin)" <path to infobeamer watchfile> 2> /dev/null
+
+and save the file in your info-beamer node folder.
+
+in the example node.lua the filename is ERP, it should be changed to the filename used.
