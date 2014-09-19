@@ -9,7 +9,6 @@ BASEDIR = path.dirname(__file__)
 open = lambda filepath: codecs.open(filepath, 'r', 'utf-8')
 
 description = open(path.join(BASEDIR, 'README.rst')).read()
-requirements = [line for line in open(path.join(BASEDIR, 'requirements.txt'))]
 
 setup(
     name='bvg-grabber',
@@ -22,7 +21,12 @@ setup(
     license='BSD',
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
-    install_requires=requirements,
+    install_requires=[
+        'beautifulsoup4>=4.2.1',
+        'python-dateutil>=2.1',
+        'requests>=1.2.3',
+        'six>=1.3.0',
+    ],
     test_suite="tests",
     scripts=['bvg-grabber.py'],
     classifiers=[

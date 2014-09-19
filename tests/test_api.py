@@ -240,7 +240,6 @@ class TestDepartureDatetime(BaseTestDeparture):
 class TestDeparture(BaseTestDeparture):
 
     def test_error(self):
-        self.assertRaises(ValueError, Departure, "from", "to", "when", "line")
         self.assertRaises(TypeError, Departure, "from", "to", ["when"], "line")
         self.assertIsInstance(Departure("from", "to", "16:15\n \t*", "line"),
                               Departure)
