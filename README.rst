@@ -12,7 +12,7 @@ Blog post:
   https://markusholtermann.eu/2013/06/showing-bvg-departures-in-your-office/
   
 Slides:
-  http://download.markusholtermann.eu/BVG-Grabber-LightningTalk.pdf
+  https://speakerdeck.com/markush/showing-bvg-departures-in-your-office
 
 Pictures:
   .. image:: https://markusholtermann.eu/images/BVG-Grabber-LightningTalk-installation1tb.jpg
