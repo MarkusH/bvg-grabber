@@ -1,12 +1,22 @@
+.. image:: https://pypip.in/download/bvg-grabber/badge.svg
+    :target: https://pypi.python.org/pypi/bvg-grabber/
+    :alt: Downloads
+
+.. image:: https://pypip.in/version/bvg-grabber/badge.svg
+    :target: https://pypi.python.org/pypi/bvg-grabber/
+    :alt: Latest Version
+
+.. image:: https://travis-ci.org/Markush2010/bvg-grabber.svg?branch=develop
+    :target: https://travis-ci.org/Markush2010/bvg-grabber
+    :alt: Development branch
+
+
+===========
 bvg-grabber
 ===========
 
 Showing BVG Departures In Your Office
-+++++++++++++++++++++++++++++++++++++
-
-.. image:: https://secure.travis-ci.org/Markush2010/bvg-grabber.png?branch=master
-    :alt: Build Status
-    :target: http://travis-ci.org/Markush2010/bvg-grabber
+=====================================
 
 Blog post:
   https://markusholtermann.eu/2013/06/showing-bvg-departures-in-your-office/
