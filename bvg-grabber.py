@@ -11,14 +11,16 @@ from bvggrabber.api.scheduleddeparture import ScheduledDepartureQueryApi, Vehicl
 
 if __name__ == '__main__':
 
+    vehicle_choices = ('S', 'U', 'TRAM', 'BUS', 'FERRY', 'RB', 'IC')
+
     parser = argparse.ArgumentParser(
         description='Query the BVG-website for departures')
     parser.add_argument('station', type=str, help='The station to query')
-    parser.add_argument('file', type=str, help='Path to file')
+    parser.add_argument('file', type=str, help='Path to file. Use - for stdout')
     parser.add_argument('--vehicle', type=str, nargs='*',
-                        help='''Vehicles which shall be queried,
-                              if non given actualdepartue (bus)
-                              will be used''')
+                        choices=vehicle_choices,
+                        help='Vehicles which shall be queried, if non given '
+                             'actualdepartue (bus) will be used')
     parser.add_argument('--limit', type=int, help='Max departures to query')
     args = parser.parse_args()
 
@@ -57,7 +59,7 @@ if __name__ == '__main__':
         res = query.call()
 
     if args.file in ('stdout', '-'):
-        print(res.to_json, file=sys.stdout)
+        print(res.to_json)
     else:
         file = open(args.file, 'w')
         print(res.to_json, file=file)
