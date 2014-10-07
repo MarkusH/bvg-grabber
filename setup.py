@@ -14,7 +14,7 @@ setup(
     name='bvg-grabber',
     description='Querying the upcoming public transport departures in Berlin',
     long_description=description,
-    version='0.1.0',
+    version='0.1.1',
     url='https://github.com/Markush2010/bvg-grabber',
     author='Christian Struck, Markus Holtermann',
     author_email='info@markusholtermann.eu',
