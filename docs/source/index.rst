@@ -9,10 +9,14 @@ Welcome to BVG-Grabber's documentation!
 Contents:
 
 .. toctree::
-   ref/api
-   ref/utils
    :maxdepth: 2
 
+   readme
+
+   ref/api
+   ref/utils
+
+   changes
 
 
 Indices and tables
