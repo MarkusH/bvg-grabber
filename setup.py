@@ -17,7 +17,7 @@ setup(
     version='0.1.0',
     url='https://github.com/Markush2010/bvg-grabber',
     author='Christian Struck, Markus Holtermann',
-    author_email='',
+    author_email='info@markusholtermann.eu',
     license='BSD',
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
