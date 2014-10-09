@@ -3,6 +3,12 @@ Changes
 =======
 
 
+v0.1.2 (under development)
+==========================
+
+* Added support for limiting queries to ``ActualDepartureQueryApi`` (#8)
+
+
 v0.1.1 (2014-10-08)
 ===================
 

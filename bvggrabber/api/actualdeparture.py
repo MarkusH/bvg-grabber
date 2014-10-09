@@ -11,7 +11,7 @@ ACTUAL_API_ENDPOINT = 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&r
 
 class ActualDepartureQueryApi(QueryApi):
 
-    def __init__(self, station):
+    def __init__(self, station, limit=5):
         super(ActualDepartureQueryApi, self).__init__()
         if isinstance(station, str):
             self.station_enc = station.encode('iso-8859-1')
@@ -20,9 +20,14 @@ class ActualDepartureQueryApi(QueryApi):
         else:
             raise ValueError("Invalid type for station")
         self.station = station
+        self.limit = limit
 
     def call(self):
-        params = {'input': self.station_enc, 'start': 'suchen'}
+        params = {
+            'input': self.station_enc,
+            'maxJourneys': self.limit,
+            'start': 'suchen',
+        }
         response = requests.get(ACTUAL_API_ENDPOINT, params=params)
         if response.ok:
             soup = BeautifulSoup(response.text)

@@ -21,7 +21,8 @@ if __name__ == '__main__':
                         choices=vehicle_choices,
                         help='Vehicles which shall be queried, if non given '
                              'actualdepartue (bus) will be used')
-    parser.add_argument('--limit', type=int, help='Max departures to query')
+    parser.add_argument('--limit', type=int, default=9,
+                        help='Max departures to query. Default: 9')
     args = parser.parse_args()
 
     query = None
@@ -44,18 +45,15 @@ if __name__ == '__main__':
                 vehicles |= Vehicle.RB
             elif vehicle == 'IC':
                 vehicles |= Vehicle.IC
-        limit = 9
-        if args.limit:
-            limit = args.limit
 
-        query = ScheduledDepartureQueryApi(args.station, vehicles, limit=limit)
+        query = ScheduledDepartureQueryApi(args.station, vehicles, limit=args.limit)
         res = query.call()
         if bus:
-            aquery = ActualDepartureQueryApi(args.station)
+            aquery = ActualDepartureQueryApi(args.station, limit=args.limit)
             res2 = aquery.call()
             res.merge(res2)
     else:
-        query = ActualDepartureQueryApi(args.station)
+        query = ActualDepartureQueryApi(args.station, limit=args.limit)
         res = query.call()
 
     if args.file in ('stdout', '-'):

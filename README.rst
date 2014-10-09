@@ -66,7 +66,7 @@ Usage
     --vehicle [{S,U,TRAM,BUS,FERRY,RB,IC} [{S,U,TRAM,BUS,FERRY,RB,IC} ...]]
                             Vehicles which shall be queried, if non given
                             actualdepartue (bus) will be used
-    --limit LIMIT         Max departures to query
+    --limit LIMIT         Max departures to query. Default: 9
 
 
 Example::
