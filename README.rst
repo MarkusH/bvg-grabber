@@ -6,8 +6,8 @@
     :target: https://pypi.python.org/pypi/bvg-grabber/
     :alt: Latest Version
 
-.. image:: https://travis-ci.org/Markush2010/bvg-grabber.svg?branch=develop
-    :target: https://travis-ci.org/Markush2010/bvg-grabber
+.. image:: https://travis-ci.org/MarkusH/bvg-grabber.svg?branch=develop
+    :target: https://travis-ci.org/MarkusH/bvg-grabber
     :alt: Development branch
 
 
