@@ -35,7 +35,7 @@ function node.render()
         j = 0
         for k, departures in pairs(stations[2]) do
             local remaining = math.floor(departures['remaining']/60)
-            if remaining >= 5 and j < 8 then
+            if j < 9 then
                 j = j + 1
                 local timeString = string.format('%2d min', remaining)
                 font:write(WIDTH-440 + alignRight(remaining), i,
