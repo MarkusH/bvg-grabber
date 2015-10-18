@@ -30,7 +30,7 @@ class ActualDepartureQueryApi(QueryApi):
         }
         response = requests.get(ACTUAL_API_ENDPOINT, params=params)
         if response.ok:
-            soup = BeautifulSoup(response.text)
+            soup = BeautifulSoup(response.text, "html.parser")
             if soup.find_all('form'):
                 # The station we are looking for is ambiguous or does not exist
                 stations = soup.find_all('option')
