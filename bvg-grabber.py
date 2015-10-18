@@ -59,7 +59,5 @@ if __name__ == '__main__':
     if args.file in ('stdout', '-'):
         print(res.to_json)
     else:
-        file = open(args.file, 'w')
-        print(res.to_json, file=file)
-        file.close()
-
+        with open(args.file, 'w') as f:
+            print(res.to_json, file=f)
