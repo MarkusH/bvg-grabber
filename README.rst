@@ -35,6 +35,8 @@ Pictures:
 Installation
 ============
 
+Requires Python 3!
+
 To use *bvg-grabber* go and install it as you do with every Python package::
 
     $ pip install bvg-grabber
