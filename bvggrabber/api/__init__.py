@@ -150,7 +150,7 @@ class Response(object):
 @total_ordering
 class Departure(object):
 
-    def __init__(self, start, end, when, line, since=None, no_add_day=False):
+    def __init__(self, start, end, when, line, since=None, no_add_day=False, scheduled=None):
         """
         :param str start: The start station
         :param str end: The end station
@@ -166,6 +166,10 @@ class Departure(object):
             resolved as :meth:`datetime.datetime.now`.
         :param bool no_add_day: If true, no additional day will be added
             if ``when`` is smaller than ``since``. Default ``False``.
+        :param bool scheduled: If ``True``, the departure info is as scheduled.
+            If ``False``, it is an actually expected one,
+            which might be out of schedule (early, late or additional).
+            If ``None``, it is unspecified.
         :raises: :exc:`TypeError` if ``when`` is invalid or cannot be parsed.
         """
         if since is None:
@@ -176,6 +180,7 @@ class Departure(object):
         self.start = start
         self.end = end
         self.line = line
+        self.scheduled = scheduled
         if isinstance(when, (int, float)):
             # We assume to get a UNIX / POSIX timestamp
             self.when = datetime.datetime.fromtimestamp(when)
