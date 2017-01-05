@@ -198,7 +198,7 @@ class Departure(object):
     @property
     def remaining(self):
         """.. seealso:: bvggrabber.api.compute_remaining"""
-        return int(compute_remaining(self.now, self.when))
+        return int(compute_remaining(datetime.datetime.now(), self.when))
 
     def __eq__(self, other):
         """Two departures are assumed to be equal iff their remaining time
