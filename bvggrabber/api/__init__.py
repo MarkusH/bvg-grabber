@@ -63,7 +63,7 @@ class Response(object):
 
         If ``state`` is ``True``, ``station`` must be a ``str`` and
         ``departures`` must be a list of :class:`Departure`` objects. If
-        ``state`` is ``False`` there must be several reasons for that:
+        ``state`` is ``False`` there might be several reasons for that:
 
             1. The provided station name during the :meth:`QueryApi.call`
                returned multiple possible departing stations. You have to
@@ -164,7 +164,7 @@ class Departure(object):
         :param since: Either ``None`` or :class:`datetime.datetime`. Defines
             the temporal start for searching. ``None`` will internally be
             resolved as :meth:`datetime.datetime.now`.
-        :param bool no_add_day: If true, there no additional day will be added
+        :param bool no_add_day: If true, no additional day will be added
             if ``when`` is smaller than ``since``. Default ``False``.
         :raises: :exc:`TypeError` if ``when`` is invalid or cannot be parsed.
         """
