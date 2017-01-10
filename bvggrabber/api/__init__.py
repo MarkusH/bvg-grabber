@@ -63,7 +63,7 @@ class Response(object):
 
         If ``state`` is ``True``, ``station`` must be a ``str`` and
         ``departures`` must be a list of :class:`Departure`` objects. If
-        ``state`` is ``False`` there must be several reasons for that:
+        ``state`` is ``False`` there might be several reasons for that:
 
             1. The provided station name during the :meth:`QueryApi.call`
                returned multiple possible departing stations. You have to
@@ -150,7 +150,7 @@ class Response(object):
 @total_ordering
 class Departure(object):
 
-    def __init__(self, start, end, when, line, since=None, no_add_day=False):
+    def __init__(self, start, end, when, line, since=None, no_add_day=False, scheduled=None):
         """
         :param str start: The start station
         :param str end: The end station
@@ -164,8 +164,12 @@ class Departure(object):
         :param since: Either ``None`` or :class:`datetime.datetime`. Defines
             the temporal start for searching. ``None`` will internally be
             resolved as :meth:`datetime.datetime.now`.
-        :param bool no_add_day: If true, there no additional day will be added
+        :param bool no_add_day: If true, no additional day will be added
             if ``when`` is smaller than ``since``. Default ``False``.
+        :param bool scheduled: If ``True``, the departure info is as scheduled.
+            If ``False``, it is an actually expected one,
+            which might be out of schedule (early, late or additional).
+            If ``None``, it is unspecified.
         :raises: :exc:`TypeError` if ``when`` is invalid or cannot be parsed.
         """
         if since is None:
@@ -176,6 +180,7 @@ class Departure(object):
         self.start = start
         self.end = end
         self.line = line
+        self.scheduled = scheduled
         if isinstance(when, (int, float)):
             # We assume to get a UNIX / POSIX timestamp
             self.when = datetime.datetime.fromtimestamp(when)
@@ -198,7 +203,7 @@ class Departure(object):
     @property
     def remaining(self):
         """.. seealso:: bvggrabber.api.compute_remaining"""
-        return int(compute_remaining(self.now, self.when))
+        return int(compute_remaining(datetime.datetime.now(), self.when))
 
     def __eq__(self, other):
         """Two departures are assumed to be equal iff their remaining time

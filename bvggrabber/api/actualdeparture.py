@@ -11,7 +11,7 @@ ACTUAL_API_ENDPOINT = 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&r
 
 class ActualDepartureQueryApi(QueryApi):
 
-    def __init__(self, station, limit=5):
+    def __init__(self, station, limit=5, json_parser=None):
         super(ActualDepartureQueryApi, self).__init__()
         if isinstance(station, str):
             self.station_enc = station.encode('iso-8859-1')
@@ -21,6 +21,7 @@ class ActualDepartureQueryApi(QueryApi):
             raise ValueError("Invalid type for station")
         self.station = station
         self.limit = limit
+        self.json_parser = json_parser
 
     def call(self):
         params = {
@@ -30,7 +31,7 @@ class ActualDepartureQueryApi(QueryApi):
         }
         response = requests.get(ACTUAL_API_ENDPOINT, params=params)
         if response.ok:
-            soup = BeautifulSoup(response.text)
+            soup = BeautifulSoup(response.text, self.json_parser)
             if soup.find_all('form'):
                 # The station we are looking for is ambiguous or does not exist
                 stations = soup.find_all('option')
@@ -56,7 +57,8 @@ class ActualDepartureQueryApi(QueryApi):
                             dep = Departure(start=self.station,
                                             end=td[2].text.strip(),
                                             when=td[0].text.strip(),
-                                            line=td[1].text.strip())
+                                            line=td[1].text.strip(),
+                                            scheduled=False)
                             departures.append(dep)
                 return Response(True, self.station, departures)
         else:

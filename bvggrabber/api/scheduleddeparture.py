@@ -28,7 +28,7 @@ class Vehicle():
 
 class ScheduledDepartureQueryApi(QueryApi):
 
-    def __init__(self, station, vehicles=Vehicle._ALL, limit=5):
+    def __init__(self, station, vehicles=Vehicle._ALL, limit=5, json_parser=None):
         """:param Vehicle vehicles: a bitmask described by :class:`Vehicle`"""
         super(ScheduledDepartureQueryApi, self).__init__()
         if isinstance(station, str):
@@ -40,6 +40,7 @@ class ScheduledDepartureQueryApi(QueryApi):
         self.station = station
         self.vehicles = int2bin(vehicles, 7)
         self.limit = limit
+        self.json_parser = json_parser
 
     def call(self):
         params = {'input': self.station_enc,
@@ -50,7 +51,7 @@ class ScheduledDepartureQueryApi(QueryApi):
                   'start': 'yes'}
         response = requests.get(SCHEDULED_API_ENDPOINT, params=params)
         if response.ok:
-            soup = BeautifulSoup(response.text)
+            soup = BeautifulSoup(response.text, self.json_parser)
             if soup.find('span', 'error'):
                 # The station we are looking for is ambiguous or does not exist
                 stations = soup.find('span', 'select').find_all('a')
@@ -73,7 +74,8 @@ class ScheduledDepartureQueryApi(QueryApi):
                     dep = Departure(start=self.station,
                                     end=tds[2].text.strip(),
                                     when=tds[0].text.strip(),
-                                    line=tds[1].text.strip())
+                                    line=tds[1].text.strip(),
+                                    scheduled=True)
                     departures.append(dep)
                 return Response(True, self.station, departures)
         else:
