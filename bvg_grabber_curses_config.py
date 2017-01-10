@@ -62,14 +62,15 @@ footer_rows = 0
 
 global nCols # number of chars the table should occupy
 global nRows # number of rows the table should occupy
-nCols = curses.COLS - 1 # all available columns
+nCols = curses.COLS # all available columns
+nCols = nCols - 1 # HACK to prevent crash, don't know why necessary
 if compact_display:
     if len(stations) == 1:
         nCols = min(nCols, 40)
     else:
         nCols = min(nCols, 60)
 
-nRows = curses.LINES - 1 # all available lines
+nRows = curses.LINES # all available lines
 if compact_display:
     if len(stations) == 1:
         nRows = min(nRows - header_rows - footer_rows, 10)
