@@ -50,7 +50,7 @@ class ScheduledDepartureQueryApi(QueryApi):
                   'start': 'yes'}
         response = requests.get(SCHEDULED_API_ENDPOINT, params=params)
         if response.ok:
-            soup = BeautifulSoup(response.text)
+            soup = BeautifulSoup(response.text, "html.parser")
             if soup.find('span', 'error'):
                 # The station we are looking for is ambiguous or does not exist
                 stations = soup.find('span', 'select').find_all('a')

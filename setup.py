@@ -22,7 +22,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
     install_requires=[
-        'beautifulsoup4>=4.2.1',
+        'beautifulsoup4>=4.4.1',
         'python-dateutil>=2.1',
         'requests>=1.2.3',
         'six>=1.3.0',
