@@ -1,8 +1,8 @@
-.. image:: https://pypip.in/download/bvg-grabber/badge.svg
+.. image:: https://img.shields.io/pypi/dm/bvg-grabber.svg
     :target: https://pypi.python.org/pypi/bvg-grabber/
     :alt: Downloads
 
-.. image:: https://pypip.in/version/bvg-grabber/badge.svg
+.. image:: https://img.shields.io/pypi/v/bvg-grabber.svg
     :target: https://pypi.python.org/pypi/bvg-grabber/
     :alt: Latest Version
 
