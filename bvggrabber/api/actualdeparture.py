@@ -57,7 +57,7 @@ class ActualDepartureQueryApi(QueryApi):
                             dep = Departure(start=self.station,
                                             end=td[2].text.strip(),
                                             when=td[0].text.strip(),
-                                            line=stro[1].text.strip())
+                                            line=stro[0].text.strip())
                             departures.append(dep)
                 return Response(True, self.station, departures)
         else:
