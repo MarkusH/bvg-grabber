@@ -10,7 +10,7 @@ from bvggrabber.api import QueryApi, Departure, Response, timeformat
 from bvggrabber.utils.format import dateformat, int2bin
 
 
-SCHEDULED_API_ENDPOINT = 'http://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox'
+SCHEDULED_API_ENDPOINT = 'https://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox'
 
 
 class Vehicle():
