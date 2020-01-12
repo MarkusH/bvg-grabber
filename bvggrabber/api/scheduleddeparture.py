@@ -70,10 +70,11 @@ class ScheduledDepartureQueryApi(QueryApi):
                 departures = []
                 for row in rows:
                     tds = row.find_all('td')
+                    stro = row.find_all('strong')
                     dep = Departure(start=self.station,
                                     end=tds[2].text.strip(),
                                     when=tds[0].text.strip(),
-                                    line=tds[1].text.strip())
+                                    line=stro[0].text.strip())
                     departures.append(dep)
                 return Response(True, self.station, departures)
         else:

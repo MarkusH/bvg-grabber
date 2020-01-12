@@ -14,7 +14,7 @@ setup(
     name='bvg-grabber',
     description='Querying the upcoming public transport departures in Berlin',
     long_description=description,
-    version='0.1.1',
+    version='0.1.4',
     url='https://github.com/MarkusH/bvg-grabber',
     author='Christian Struck, Markus Holtermann',
     author_email='info@markusholtermann.eu',
@@ -27,7 +27,7 @@ setup(
         'requests>=1.2.3',
         'six>=1.3.0',
     ],
-    test_suite="tests",
+#    test_suite="tests",
     scripts=['bvg-grabber.py'],
     classifiers=[
         'Development Status :: 4 - Beta',
