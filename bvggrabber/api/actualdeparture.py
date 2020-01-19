@@ -52,6 +52,8 @@ class ActualDepartureQueryApi(QueryApi):
                 for row in rows:
                     if row.parent.name == 'tbody':
                         td = row.find_all('td')
+                        if len(td) != 3:
+                            continue
                         if td:
                             dep = Departure(start=self.station,
                                             end=td[2].text.strip(),
