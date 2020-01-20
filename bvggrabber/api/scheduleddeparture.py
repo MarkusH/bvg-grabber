@@ -70,6 +70,8 @@ class ScheduledDepartureQueryApi(QueryApi):
                 departures = []
                 for row in rows:
                     tds = row.find_all('td')
+                    if len(tds) != 3:
+                        continue
                     dep = Departure(start=self.station,
                                     end=tds[2].text.strip(),
                                     when=tds[0].text.strip(),
