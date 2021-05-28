@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from bvggrabber.api import QueryApi, Departure, Response
 
 
-ACTUAL_API_ENDPOINT = 'https://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&rt=0&'
+ACTUAL_API_ENDPOINT = 'https://mobil.bvg.de/Fahrinfo/bin/stboard.bin/dox?ld=0.1&boardType=depRT&'
 
 
 class ActualDepartureQueryApi(QueryApi):
