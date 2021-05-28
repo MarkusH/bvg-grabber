@@ -3,4 +3,4 @@
 
 __author__ = 'Christian Struck, Markus Holtermann'
 __email__ = 'info@markusholtermann.eu'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
